@@ -1,0 +1,399 @@
+/* =====================================================
+   DAPLAST - FIRMA DE EPI
+   ===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px 15px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f6f7;
+    color: #333;
+}
+
+
+/* =====================================================
+   CONTENEDOR PRINCIPAL
+   ===================================================== */
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 35px 40px 40px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =====================================================
+   LOGO
+   ===================================================== */
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    max-width: 180px;
+    height: auto;
+}
+
+
+/* =====================================================
+   TÍTULO
+   ===================================================== */
+
+h1 {
+    color: #044a80;
+    text-align: center;
+    margin: 5px 0 8px;
+    font-size: 28px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 15px;
+    margin: 0 0 30px;
+}
+
+
+/* =====================================================
+   BLOQUES DE INFORMACIÓN
+   ===================================================== */
+
+.solicitud-info {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 24px;
+    border: 1px solid #e5e7e9;
+}
+
+.solicitud-info h3 {
+    color: #044a80;
+    margin: 0 0 20px;
+    font-size: 19px;
+}
+
+
+/* =====================================================
+   DATOS SOLICITUD
+   ===================================================== */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 30px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.info-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.info-value {
+    font-size: 16px;
+    color: #222;
+    font-weight: 500;
+}
+
+
+/* =====================================================
+   TABLA EPIs
+   ===================================================== */
+
+.epi-table-wrapper {
+    overflow-x: auto;
+}
+
+.epi-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.epi-table th {
+    background: #044a80;
+    color: white;
+    padding: 13px 14px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.epi-table th:first-child {
+    border-top-left-radius: 8px;
+}
+
+.epi-table th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.epi-table td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #e2e2e2;
+    font-size: 14px;
+    background: white;
+}
+
+.epi-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =====================================================
+   FIRMA
+   ===================================================== */
+
+.firma-container {
+    margin-top: 28px;
+}
+
+.firma-container h3 {
+    color: #044a80;
+    margin: 0 0 7px;
+    font-size: 19px;
+}
+
+.firma-ayuda {
+    color: #666;
+    font-size: 14px;
+    margin: 0 0 12px;
+}
+
+
+/* =====================================================
+   CANVAS
+   ===================================================== */
+
+#canvasFirma {
+    width: 100%;
+    height: 220px;
+    display: block;
+
+    background: white;
+
+    border: 2px dashed #c5d800;
+    border-radius: 10px;
+
+    cursor: crosshair;
+
+    touch-action: none;
+}
+
+
+/* =====================================================
+   BOTÓN BORRAR
+   ===================================================== */
+
+.firma-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 9px;
+}
+
+.btn-borrar {
+    background: transparent;
+    color: #666;
+
+    border: 1px solid #ccc;
+    border-radius: 7px;
+
+    padding: 8px 14px;
+
+    font-size: 13px;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.btn-borrar:hover {
+    background: #f1f1f1;
+}
+
+
+/* =====================================================
+   ACEPTACIÓN
+   ===================================================== */
+
+.aceptacion {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    margin-top: 22px;
+
+    font-size: 14px;
+    line-height: 1.5;
+
+    color: #444;
+
+    cursor: pointer;
+}
+
+.aceptacion input {
+    width: 18px;
+    height: 18px;
+
+    margin: 2px 0 0;
+
+    flex-shrink: 0;
+
+    accent-color: #044a80;
+}
+
+
+/* =====================================================
+   BOTÓN FIRMAR
+   ===================================================== */
+
+.btn-firmar {
+    width: 100%;
+
+    margin-top: 20px;
+    padding: 14px 20px;
+
+    background: #044a80;
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn-firmar:hover {
+    background: #033b67;
+}
+
+.btn-firmar:active {
+    transform: scale(0.99);
+}
+
+.btn-firmar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   MENSAJES
+   ===================================================== */
+
+.estado-mensaje {
+    display: none;
+
+    padding: 14px 16px;
+    margin-top: 18px;
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+.estado-exito {
+    background: #eef7d5;
+    color: #456000;
+    border: 1px solid #d7e8a7;
+}
+
+.estado-error {
+    background: #fdecec;
+    color: #9b1c1c;
+    border: 1px solid #f3c5c5;
+}
+
+
+/* =====================================================
+   DOCUMENTO YA FIRMADO
+   ===================================================== */
+
+.documento-firmado {
+    text-align: center;
+    padding: 35px 20px;
+}
+
+.documento-firmado h2 {
+    color: #044a80;
+    margin-bottom: 10px;
+}
+
+
+/* =====================================================
+   RESPONSIVE - MÓVIL
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 15px 10px;
+    }
+
+    .card {
+        padding: 25px 18px 30px;
+        border-radius: 12px;
+    }
+
+    .logo {
+        max-width: 150px;
+    }
+
+    h1 {
+        font-size: 23px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .solicitud-info {
+        padding: 18px 15px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .info-value {
+        font-size: 15px;
+    }
+
+    #canvasFirma {
+        height: 190px;
+    }
+
+    .btn-firmar {
+        padding: 15px;
+        font-size: 15px;
+    }
+}
