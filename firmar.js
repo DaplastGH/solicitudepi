@@ -2,7 +2,7 @@
 // CONFIGURACIÓN
 // ======================================================
 
-const POWER_AUTOMATE_URL = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/d871c304d7ab4e6b896c1129e9ed286c/triggers/manual/paths/invoke?api-version=1";
+const POWER_AUTOMATE_URL = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/d871c304d7ab4e6b896c1129e9ed286c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6uDYutyrd21nBPUhdeWwG4kqJLIkT3wTCiS0czgie74";
 
 
 // ======================================================
