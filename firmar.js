@@ -507,7 +507,7 @@ async function generarPDFSolicitud(datos) {
 async function probarPDF() {
 
     const respuestaPDF = await fetch(
-        'Reg%20Entrega%20EPIS%20editable%282%29.pdf'
+    'Reg%20Entrega%20EPIS%20editable.pdf'
     );
 
     const pdfBytes = await respuestaPDF.arrayBuffer();
