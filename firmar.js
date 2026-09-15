@@ -430,3 +430,5 @@ function mostrarError(mensaje) {
 
     mensajeError.style.display = "block";
 }
+
+cargarSolicitud();
