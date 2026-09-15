@@ -207,7 +207,94 @@ btnBorrar.addEventListener(
     }
 );
 
+async function cargarSolicitud() {
 
+    if (!idSolicitud) {
+        mostrarError("No se ha encontrado el número de solicitud.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            POWER_AUTOMATE_URL,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    IDSolicitud: idSolicitud
+                })
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("Error al obtener la solicitud.");
+        }
+
+        const datos = await response.json();
+
+        console.log("Respuesta Power Automate:", datos);
+
+        if (datos.resultado !== "ok") {
+            throw new Error("La solicitud no existe.");
+        }
+
+        const solicitud = datos.solicitud;
+
+        // Datos generales
+        document.getElementById("idSolicitud").textContent =
+            solicitud.id;
+
+        document.getElementById("fechaSolicitud").textContent =
+            solicitud.fecha;
+
+        document.getElementById("numeroOperario").textContent =
+            solicitud.numeroOperario;
+
+        document.getElementById("trabajador").textContent =
+            solicitud.trabajador;
+
+        document.getElementById("area").textContent =
+            solicitud.area;
+
+        document.getElementById("puesto").textContent =
+            solicitud.puesto;
+
+        document.getElementById("motivo").textContent =
+            solicitud.motivo;
+
+
+        // EPIs
+        const tabla = document.getElementById("tablaEPIs");
+
+        tabla.innerHTML = "";
+
+        datos.epis.forEach(epi => {
+
+            const fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>${epi.epi || ""}</td>
+                <td>${epi.modelo || ""}</td>
+                <td>${epi.cantidad || ""}</td>
+            `;
+
+            tabla.appendChild(fila);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        mostrarError(
+            "No se ha podido cargar la solicitud."
+        );
+    }
+}
 // ======================================================
 // FIRMAR
 // ======================================================
@@ -249,7 +336,7 @@ btnFirmar.addEventListener(
         // Si todavía no hemos conectado Power Automate,
         // simplemente mostramos la firma capturada.
 
-        if (!POWER_AUTOMATE_URL) {
+        if (!POWER_AUTOMATE_URL_pend) {
 
             const firma = canvas.toDataURL("image/png");
 
@@ -288,7 +375,7 @@ btnFirmar.addEventListener(
         try {
 
             const response = await fetch(
-                POWER_AUTOMATE_URL,
+                POWER_AUTOMATE_URL_pend,
                 {
                     method: "POST",
 
