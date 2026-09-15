@@ -3,7 +3,7 @@
 // ======================================================
 
 const POWER_AUTOMATE_URL = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/d871c304d7ab4e6b896c1129e9ed286c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6uDYutyrd21nBPUhdeWwG4kqJLIkT3wTCiS0czgie74";
-
+const POWER_AUTOMATE_URL_FIRMA = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/07/workflows/d1c008abf1794d05966acb78c89a286e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XISxADVeCHdLM7OhIER-LvNDz0fykHB-N-4ukGPo7Qk"
 
 // ======================================================
 // OBTENER ID DE SOLICITUD DE LA URL
@@ -340,7 +340,7 @@ btnFirmar.addEventListener(
         // Si todavía no hemos conectado Power Automate,
         // simplemente mostramos la firma capturada.
 
-        if (!POWER_AUTOMATE_URL_pend) {
+        if (!POWER_AUTOMATE_URL_FIRMA) {
 
             const firma = canvas.toDataURL("image/png");
 
@@ -379,7 +379,7 @@ btnFirmar.addEventListener(
         try {
 
             const response = await fetch(
-                POWER_AUTOMATE_URL_pend,
+                POWER_AUTOMATE_URL_FIRMA,
                 {
                     method: "POST",
 
