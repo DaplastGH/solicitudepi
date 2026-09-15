@@ -1,378 +1,353 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Firma de entrega de EPI - DAPLAST</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="firmar.css">
 
-    <!-- Select2 / opcional si se necesita posteriormente -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-
-    <style>
-        .solicitud-info {
-            background: #f7f8fa;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-        }
-
-        .solicitud-info h3 {
-            color: #044a80;
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px 20px;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
-
-        .info-label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #777;
-            text-transform: uppercase;
-        }
-
-        .info-value {
-            font-size: 15px;
-            color: #222;
-        }
-
-        .epi-table-wrapper {
-            overflow-x: auto;
-            margin-top: 15px;
-        }
-
-        .epi-table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 500px;
-        }
-
-        .epi-table th {
-            background: #044a80;
-            color: white;
-            padding: 10px;
-            text-align: left;
-            font-size: 14px;
-        }
-
-        .epi-table td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            font-size: 14px;
-        }
-
-        .epi-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .firma-container {
-            margin-top: 25px;
-        }
-
-        .firma-container h3 {
-            color: #044a80;
-            margin-bottom: 8px;
-        }
-
-        .firma-ayuda {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        #canvasFirma {
-            width: 100%;
-            height: 220px;
-            border: 2px dashed #c5d800;
-            border-radius: 12px;
-            background: white;
-            cursor: crosshair;
-            touch-action: none;
-            display: block;
-        }
-
-        .firma-buttons {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-
-        .btn-borrar {
-            background: #eee;
-            color: #333;
-            border: none;
-            padding: 9px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .btn-borrar:hover {
-            background: #ddd;
-        }
-
-        .aceptacion {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            margin-top: 20px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .aceptacion input {
-            margin-top: 4px;
-            width: 18px;
-            height: 18px;
-            accent-color: #044a80;
-        }
-
-        .btn-firmar {
-            width: 100%;
-            margin-top: 20px;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #044a80;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-firmar:hover {
-            background: #03395f;
-        }
-
-        .btn-firmar:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .estado-mensaje {
-            display: none;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .estado-exito {
-            background: #eaf6d0;
-            color: #355000;
-        }
-
-        .estado-error {
-            background: #fdeaea;
-            color: #9b1c1c;
-        }
-
-        .documento-firmado {
-            text-align: center;
-            padding: 30px 15px;
-        }
-
-        .documento-firmado h2 {
-            color: #044a80;
-            margin-bottom: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            #canvasFirma {
-                height: 180px;
-            }
-
-            .epi-table th,
-            .epi-table td {
-                padding: 8px;
-            }
-        }
-    </style>
 </head>
+
 
 <body>
 
-<div class="container">
 
-    <div class="card">
+<div class="page-container">
 
-        <div class="logo-container">
-            <img src="https://daplast.com/wp-content/uploads/2023/05/logo-daplast.png"
-                 alt="DAPLAST"
-                 class="logo">
+    <div class="solicitud-box">
+
+
+        <!-- ========================= -->
+        <!-- LOGO -->
+        <!-- ========================= -->
+
+        <div class="logo-daplast">
+
+            <img
+                src="https://daplast.com/wp-content/uploads/2023/05/logo-daplast.png"
+                alt="DAPLAST">
+
         </div>
 
-        <h1>Entrega de EPI</h1>
+
+        <!-- ========================= -->
+        <!-- TÍTULO -->
+        <!-- ========================= -->
+
+        <h1>
+            Entrega de EPI
+        </h1>
 
         <p class="subtitle">
             Revisión y firma del documento de entrega
         </p>
 
-        <!-- INFORMACIÓN DE LA SOLICITUD -->
-        <div id="contenidoSolicitud">
 
-            <div class="solicitud-info">
 
-                <h3>Datos de la solicitud</h3>
+        <!-- ========================= -->
+        <!-- DATOS SOLICITUD -->
+        <!-- ========================= -->
 
-                <div class="info-grid">
+        <div class="solicitud-info">
 
-                    <div class="info-item">
-                        <span class="info-label">Solicitud</span>
-                        <span class="info-value" id="idSolicitud">Cargando...</span>
-                    </div>
+            <h2 class="section-title">
+                Datos de la solicitud
+            </h2>
 
-                    <div class="info-item">
-                        <span class="info-label">Fecha</span>
-                        <span class="info-value" id="fechaSolicitud">Cargando...</span>
-                    </div>
 
-                    <div class="info-item">
-                        <span class="info-label">Nº operario</span>
-                        <span class="info-value" id="numeroOperario">Cargando...</span>
-                    </div>
+            <div class="info-grid">
 
-                    <div class="info-item">
-                        <span class="info-label">Trabajador</span>
-                        <span class="info-value" id="trabajador">Cargando...</span>
-                    </div>
 
-                    <div class="info-item">
-                        <span class="info-label">Área / Departamento</span>
-                        <span class="info-value" id="area">Cargando...</span>
-                    </div>
+                <div class="info-item">
 
-                    <div class="info-item">
-                        <span class="info-label">Puesto de trabajo</span>
-                        <span class="info-value" id="puesto">Cargando...</span>
-                    </div>
+                    <span class="info-label">
+                        Solicitud
+                    </span>
 
-                    <div class="info-item">
-                        <span class="info-label">Motivo</span>
-                        <span class="info-value" id="motivo">Cargando...</span>
-                    </div>
+                    <span
+                        class="info-value"
+                        id="idSolicitud">
+                        Cargando...
+                    </span>
 
                 </div>
 
-            </div>
 
+                <div class="info-item">
 
-            <!-- EPIs -->
-            <div class="solicitud-info">
+                    <span class="info-label">
+                        Fecha
+                    </span>
 
-                <h3>Equipos de protección entregados</h3>
-
-                <div class="epi-table-wrapper">
-
-                    <table class="epi-table">
-
-                        <thead>
-                            <tr>
-                                <th>EPI</th>
-                                <th>Modelo</th>
-                                <th>Cantidad</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="tablaEPIs">
-                            <tr>
-                                <td colspan="3">Cargando...</td>
-                            </tr>
-                        </tbody>
-
-                    </table>
+                    <span
+                        class="info-value"
+                        id="fechaSolicitud">
+                        Cargando...
+                    </span>
 
                 </div>
 
-            </div>
 
+                <div class="info-item">
 
-            <!-- FIRMA -->
-            <div class="firma-container">
+                    <span class="info-label">
+                        Nº operario
+                    </span>
 
-                <h3>Firma del trabajador</h3>
-
-                <p class="firma-ayuda">
-                    Realice su firma en el recuadro utilizando el dedo o el lápiz de la pantalla.
-                </p>
-
-                <canvas id="canvasFirma"></canvas>
-
-                <div class="firma-buttons">
-
-                    <button type="button"
-                            class="btn-borrar"
-                            id="btnBorrar">
-                        Borrar firma
-                    </button>
+                    <span
+                        class="info-value"
+                        id="numeroOperario">
+                        Cargando...
+                    </span>
 
                 </div>
 
-            </div>
+
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Trabajador
+                    </span>
+
+                    <span
+                        class="info-value"
+                        id="trabajador">
+                        Cargando...
+                    </span>
+
+                </div>
 
 
-            <!-- ACEPTACIÓN -->
-            <label class="aceptacion">
+                <div class="info-item">
 
-                <input type="checkbox" id="aceptacion">
+                    <span class="info-label">
+                        Área / Departamento
+                    </span>
 
-                <span>
-                    Confirmo que he recibido los equipos de protección indicados
-                    y que la información correspondiente a la entrega es correcta.
-                </span>
+                    <span
+                        class="info-value"
+                        id="area">
+                        Cargando...
+                    </span>
 
-            </label>
-
-
-            <!-- FIRMAR -->
-            <button type="button"
-                    class="btn-firmar"
-                    id="btnFirmar">
-
-                Firmar y confirmar entrega
-
-            </button>
+                </div>
 
 
-            <div id="mensajeExito"
-                 class="estado-mensaje estado-exito">
+                <div class="info-item">
 
-                Documento firmado correctamente.
+                    <span class="info-label">
+                        Puesto de trabajo
+                    </span>
 
-            </div>
+                    <span
+                        class="info-value"
+                        id="puesto">
+                        Cargando...
+                    </span>
+
+                </div>
 
 
-            <div id="mensajeError"
-                 class="estado-mensaje estado-error">
+                <div class="info-item">
+
+                    <span class="info-label">
+                        Motivo
+                    </span>
+
+                    <span
+                        class="info-value"
+                        id="motivo">
+                        Cargando...
+                    </span>
+
+                </div>
+
 
             </div>
 
         </div>
 
 
-        <!-- DOCUMENTO YA FIRMADO -->
-        <div id="documentoFirmado"
-             class="documento-firmado"
-             style="display:none;">
 
-            <h2>Documento ya firmado</h2>
+        <!-- ========================= -->
+        <!-- EPIs -->
+        <!-- ========================= -->
+
+        <div class="solicitud-info">
+
+            <h2 class="section-title">
+                Equipos de protección entregados
+            </h2>
+
+
+            <div class="epi-table-wrapper">
+
+                <table class="epi-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                EPI
+                            </th>
+
+                            <th>
+                                Modelo
+                            </th>
+
+                            <th>
+                                Cantidad
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tablaEPIs">
+
+                        <tr>
+
+                            <td colspan="3">
+                                Cargando...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- FIRMA -->
+        <!-- ========================= -->
+
+        <div class="firma-container">
+
+            <h2 class="section-title">
+                Firma del trabajador
+            </h2>
+
+
+            <p class="firma-ayuda">
+                Realice su firma en el recuadro utilizando el dedo
+                o el lápiz de la pantalla.
+            </p>
+
+
+            <canvas id="canvasFirma"></canvas>
+
+
+            <div class="firma-buttons">
+
+                <button
+                    type="button"
+                    class="btn-borrar"
+                    id="btnBorrar">
+
+                    Borrar firma
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- ACEPTACIÓN -->
+        <!-- ========================= -->
+
+        <label class="aceptacion">
+
+
+            <input
+                type="checkbox"
+                id="aceptacion">
+
+
+            <span>
+
+                Confirmo que he recibido los equipos de protección
+                indicados y que la información correspondiente a la
+                entrega es correcta.
+
+            </span>
+
+
+        </label>
+
+
+
+        <!-- ========================= -->
+        <!-- BOTÓN FIRMAR -->
+        <!-- ========================= -->
+
+        <button
+            type="button"
+            class="btn-firmar"
+            id="btnFirmar">
+
+            Firmar y confirmar entrega
+
+        </button>
+
+
+
+        <!-- ========================= -->
+        <!-- MENSAJE ÉXITO -->
+        <!-- ========================= -->
+
+        <div
+            id="mensajeExito"
+            class="estado-mensaje estado-exito">
+
+            Documento firmado correctamente.
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- MENSAJE ERROR -->
+        <!-- ========================= -->
+
+        <div
+            id="mensajeError"
+            class="estado-mensaje estado-error">
+
+        </div>
+
+
+
+        <!-- ========================= -->
+        <!-- DOCUMENTO YA FIRMADO -->
+        <!-- ========================= -->
+
+        <div
+            id="documentoFirmado"
+            class="documento-firmado"
+            style="display:none;">
+
+            <h2>
+                Documento ya firmado
+            </h2>
 
             <p>
                 Esta solicitud ya ha sido firmada y no puede modificarse.
@@ -380,12 +355,16 @@
 
         </div>
 
+
     </div>
 
 </div>
 
 
+
 <script src="firmar.js"></script>
 
+
 </body>
+
 </html>
