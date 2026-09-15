@@ -506,7 +506,7 @@ async function generarPDFSolicitud(datos) {
 
 async function comprobarCamposPDF() {
 
-    const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
+    const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable%282%29.pdf');
     const pdfBytes = await respuestaPDF.arrayBuffer();
 
     const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
@@ -517,7 +517,8 @@ async function comprobarCamposPDF() {
     campos.forEach(campo => {
         console.log(
             campo.getName(),
-            campo.constructor.name
+            campo.constructor.name,
+            campo.getText ? campo.getText() : ''
         );
     });
 }
