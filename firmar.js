@@ -504,23 +504,36 @@ async function generarPDFSolicitud(datos) {
     }
 }
 
-async function comprobarCamposPDF() {
+async function probarPDF() {
 
-    const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable%282%29.pdf');
+    const respuestaPDF = await fetch(
+        'Reg%20Entrega%20EPIS%20editable%282%29.pdf'
+    );
+
     const pdfBytes = await respuestaPDF.arrayBuffer();
 
     const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
     const form = pdfDoc.getForm();
 
-    const campos = form.getFields();
+    // Datos de prueba
+    form.getTextField('Textbox2').setText('INSTALACIONES-VALENCIA');
+    form.getTextField('Textbox3').setText('JUAN JOSE BELMONTE AGUILERA');
+    form.getTextField('Textbox4').setText('PEÓN INSTALADOR');
 
-    campos.forEach(campo => {
-        console.log(
-            campo.getName(),
-            campo.constructor.name,
-            campo.getText ? campo.getText() : ''
-        );
+    // Convertir los campos en texto normal
+    form.flatten();
+
+    // Crear el nuevo PDF
+    const pdfFinal = await pdfDoc.save();
+
+    // Abrirlo
+    const blob = new Blob([pdfFinal], {
+        type: 'application/pdf'
     });
+
+    const url = URL.createObjectURL(blob);
+
+    window.open(url, '_blank');
 }
 
-comprobarCamposPDF();
+probarPDF();
