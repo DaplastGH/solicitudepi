@@ -503,3 +503,23 @@ async function generarPDFSolicitud(datos) {
         return null;
     }
 }
+
+async function comprobarCamposPDF() {
+
+    const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
+    const pdfBytes = await respuestaPDF.arrayBuffer();
+
+    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    const form = pdfDoc.getForm();
+
+    const campos = form.getFields();
+
+    campos.forEach(campo => {
+        console.log(
+            campo.getName(),
+            campo.constructor.name
+        );
+    });
+}
+
+comprobarCamposPDF();
