@@ -436,3 +436,70 @@ function mostrarError(mensaje) {
 }
 
 cargarSolicitud();
+
+async function generarPDFSolicitud(datos) {
+
+    try {
+
+        // 1. Descargar el PDF original
+        const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
+
+        if (!respuestaPDF.ok) {
+            throw new Error('No se ha podido cargar el PDF original');
+        }
+
+        const pdfBytes = await respuestaPDF.arrayBuffer();
+
+        // 2. Abrir PDF con pdf-lib
+        const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+
+        // 3. Obtener formulario
+        const form = pdfDoc.getForm();
+
+        const solicitud = datos.solicitud;
+        const epis = datos.epis;
+
+        // 4. Rellenar datos generales
+        form.getTextField('Textbox1').setText(solicitud.fecha || '');
+        form.getTextField('Textbox2').setText(solicitud.area || '');
+        form.getTextField('Textbox3').setText(solicitud.trabajador || '');
+        form.getTextField('Textbox4').setText(solicitud.puesto || '');
+
+        // 5. Rellenar EPIs
+        epis.forEach((epi, index) => {
+
+            const fila = index + 1;
+
+            // De momento probamos con esta correspondencia
+            const campoEPI = `Textbox${4 + fila}`;
+            const campoCantidad = `Textbox${12 + fila}`;
+
+            try {
+                form.getTextField(campoEPI).setText(epi.epi || '');
+                form.getTextField(campoCantidad).setText(String(epi.cantidad || ''));
+            } catch (e) {
+                console.log(`No se pudo rellenar la fila ${fila}`, e);
+            }
+        });
+
+        // 6. Aplanar los campos
+        form.flatten();
+
+        // 7. Generar nuevo PDF
+        const pdfFinal = await pdfDoc.save();
+
+        // 8. Crear URL temporal
+        const blob = new Blob([pdfFinal], {
+            type: 'application/pdf'
+        });
+
+        return URL.createObjectURL(blob);
+
+    } catch (error) {
+
+        console.error('Error generando PDF:', error);
+        alert('No se ha podido generar el PDF.');
+
+        return null;
+    }
+}
