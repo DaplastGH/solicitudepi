@@ -209,7 +209,11 @@ btnBorrar.addEventListener(
 
 async function cargarSolicitud() {
 
-    if (!idSolicitud) {
+    console.log("🚀 cargarSolicitud ejecutándose");
+    console.log("ID solicitud:", idSolicitud);
+    console.log("URL Power Automate:", POWER_AUTOMATE_URL);
+    
+if (!idSolicitud) {
         mostrarError("No se ha encontrado el número de solicitud.");
         return;
     }
