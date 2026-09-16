@@ -358,7 +358,7 @@ const fechaFirma =
     String(ahora.getMonth() + 1).padStart(2, '0') + '/' +
     ahora.getFullYear();
 
-form.getTextField('Textbox22').setText(fechaFirma);
+form.getTextField('Textbox23').setText(fechaFirma);
         // ==================================================
         // APLANAR FORMULARIO
         // ==================================================
