@@ -351,7 +351,14 @@ async function generarPDFSolicitud(datos) {
             }
         );
 
+const ahora = new Date();
 
+const fechaFirma =
+    String(ahora.getDate()).padStart(2, '0') + '/' +
+    String(ahora.getMonth() + 1).padStart(2, '0') + '/' +
+    ahora.getFullYear();
+
+form.getTextField('Textbox22').setText(fechaFirma);
         // ==================================================
         // APLANAR FORMULARIO
         // ==================================================
@@ -692,20 +699,11 @@ try {
 
     // Posición de la firma en el documento
     pagina.drawImage(firmaImagen, {
-        x: 115,
-        y: 50,
-        width: anchoFirma,
-        height: altoFirma
-    });
-
-    // Fecha de firma
-    const fechaFirma = new Date().toLocaleDateString("es-ES");
-
-    pagina.drawText(fechaFirma, {
-        x: 260,
-        y: 65,
-        size: 9
-    });
+    x: 214,
+    y: 681,
+    width: 130,
+    height: 50
+});
 
     // Guardar PDF definitivo
     const pdfFirmado = await pdfDoc.save();
