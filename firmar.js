@@ -3,7 +3,9 @@
 // ======================================================
 
 const POWER_AUTOMATE_URL = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/d871c304d7ab4e6b896c1129e9ed286c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=6uDYutyrd21nBPUhdeWwG4kqJLIkT3wTCiS0czgie74";
+
 const POWER_AUTOMATE_URL_FIRMA = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/07/workflows/d1c008abf1794d05966acb78c89a286e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XISxADVeCHdLM7OhIER-LvNDz0fykHB-N-4ukGPo7Qk"
+
 
 // ======================================================
 // OBTENER ID DE SOLICITUD DE LA URL
@@ -40,7 +42,10 @@ let hayFirma = false;
 // Ajustar resolución del canvas
 function ajustarCanvas() {
 
-    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    const ratio = Math.max(
+        window.devicePixelRatio || 1,
+        1
+    );
 
     const rect = canvas.getBoundingClientRect();
 
@@ -68,15 +73,28 @@ function obtenerPosicion(evento) {
     let x;
     let y;
 
-    if (evento.touches && evento.touches.length > 0) {
+    if (
+        evento.touches &&
+        evento.touches.length > 0
+    ) {
 
-        x = evento.touches[0].clientX - rect.left;
-        y = evento.touches[0].clientY - rect.top;
+        x =
+            evento.touches[0].clientX -
+            rect.left;
+
+        y =
+            evento.touches[0].clientY -
+            rect.top;
 
     } else {
 
-        x = evento.clientX - rect.left;
-        y = evento.clientY - rect.top;
+        x =
+            evento.clientX -
+            rect.left;
+
+        y =
+            evento.clientY -
+            rect.top;
     }
 
     return { x, y };
@@ -207,98 +225,388 @@ btnBorrar.addEventListener(
     }
 );
 
-async function cargarSolicitud() {
 
-    console.log("🚀 cargarSolicitud ejecutándose");
-    console.log("ID solicitud:", idSolicitud);
-    console.log("URL Power Automate:", POWER_AUTOMATE_URL);
-    
-if (!idSolicitud) {
-        mostrarError("No se ha encontrado el número de solicitud.");
-        return;
-    }
+// ======================================================
+// GENERAR PDF
+// ======================================================
+
+async function generarPDFSolicitud(datos) {
 
     try {
 
-        const response = await fetch(
-            POWER_AUTOMATE_URL,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    IDSolicitud: idSolicitud
-                })
+        // Descargar PDF original
+        const respuestaPDF = await fetch(
+            'Reg%20Entrega%20EPIS%20editable.pdf'
+        );
+
+        if (!respuestaPDF.ok) {
+
+            throw new Error(
+                'No se ha podido cargar el PDF original'
+            );
+        }
+
+        const pdfBytes =
+            await respuestaPDF.arrayBuffer();
+
+
+        // Abrir PDF
+        const pdfDoc =
+            await PDFLib.PDFDocument.load(
+                pdfBytes
+            );
+
+
+        // Obtener formulario
+        const form =
+            pdfDoc.getForm();
+
+
+        // ==================================================
+        // DATOS GENERALES
+        // ==================================================
+
+        form.getTextField(
+            'Textbox2'
+        ).setText(
+            datos.solicitud.area || ''
+        );
+
+
+        form.getTextField(
+            'Textbox3'
+        ).setText(
+            datos.solicitud.trabajador || ''
+        );
+
+
+        form.getTextField(
+            'Textbox4'
+        ).setText(
+            datos.solicitud.puesto || ''
+        );
+
+
+        // ==================================================
+        // CAMPOS DE EPIs
+        // ==================================================
+
+        const camposEPI = [
+
+            'Textbox1',
+            'Textbox5',
+            'Textbox6',
+            'Textbox7',
+            'Textbox8',
+            'Textbox9',
+            'Textbox10',
+            'Textbox11',
+            'Textbox12'
+
+        ];
+
+
+        const camposCantidad = [
+
+            'Textbox13',
+            'Textbox14',
+            'Textbox15',
+            'Textbox16',
+            'Textbox17',
+            'Textbox18',
+            'Textbox19',
+            'Textbox20',
+            'Textbox21'
+
+        ];
+
+
+        // ==================================================
+        // RELLENAR EPIs
+        // ==================================================
+
+        datos.epis.forEach(
+            (epi, index) => {
+
+                // El PDF tiene 9 filas
+                if (index >= 9) return;
+
+
+                form.getTextField(
+                    camposEPI[index]
+                ).setText(
+                    epi.epi || ''
+                );
+
+
+                form.getTextField(
+                    camposCantidad[index]
+                ).setText(
+                    String(
+                        epi.cantidad || ''
+                    )
+                );
+
             }
         );
 
+
+        // ==================================================
+        // APLANAR FORMULARIO
+        // ==================================================
+
+        form.flatten();
+
+
+        // ==================================================
+        // GENERAR PDF FINAL DE ESTA FASE
+        // ==================================================
+
+        const pdfFinal =
+            await pdfDoc.save();
+
+
+        // ==================================================
+        // MOSTRAR PDF EN LA PÁGINA
+        // ==================================================
+
+        const blob =
+            new Blob(
+                [pdfFinal],
+                {
+                    type: 'application/pdf'
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(blob);
+
+
+        const visorPDF =
+            document.getElementById(
+                'visorPDF'
+            );
+
+
+        if (!visorPDF) {
+
+            throw new Error(
+                'No se encuentra el visorPDF en el HTML'
+            );
+        }
+
+
+        visorPDF.src = url;
+
+
+        return pdfFinal;
+
+    } catch (error) {
+
+        console.error(
+            'Error generando PDF:',
+            error
+        );
+
+        mostrarError(
+            'No se ha podido generar el PDF.'
+        );
+
+        return null;
+    }
+}
+
+
+// ======================================================
+// CARGAR SOLICITUD
+// ======================================================
+
+async function cargarSolicitud() {
+
+    console.log(
+        "🚀 cargarSolicitud ejecutándose"
+    );
+
+    console.log(
+        "ID solicitud:",
+        idSolicitud
+    );
+
+
+    if (!idSolicitud) {
+
+        mostrarError(
+            "No se ha encontrado el número de solicitud."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        // ==================================================
+        // PEDIR SOLICITUD A POWER AUTOMATE
+        // ==================================================
+
+        const response =
+            await fetch(
+                POWER_AUTOMATE_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        IDSolicitud:
+                            idSolicitud
+                    })
+                }
+            );
+
+
         if (!response.ok) {
-            throw new Error("Error al obtener la solicitud.");
+
+            throw new Error(
+                "Error al obtener la solicitud."
+            );
         }
 
-        const datos = await response.json();
 
-        console.log("Respuesta Power Automate:", datos);
+        const datos =
+            await response.json();
 
-        if (datos.resultado !== "ok") {
-            throw new Error("La solicitud no existe.");
+
+        console.log(
+            "Respuesta Power Automate:",
+            datos
+        );
+
+
+        if (
+            datos.resultado !== "ok"
+        ) {
+
+            throw new Error(
+                "La solicitud no existe."
+            );
         }
 
-        const solicitud = datos.solicitud;
 
-        // Datos generales
-        document.getElementById("idSolicitud").textContent =
-            solicitud.id;
-
-        document.getElementById("fechaSolicitud").textContent =
-            solicitud.fecha;
-
-        document.getElementById("numeroOperario").textContent =
-            solicitud.numeroOperario;
-
-        document.getElementById("trabajador").textContent =
-            solicitud.trabajador;
-
-        document.getElementById("area").textContent =
-            solicitud.area;
-
-        document.getElementById("puesto").textContent =
-            solicitud.puesto;
-
-        document.getElementById("motivo").textContent =
-            solicitud.motivo;
+        const solicitud =
+            datos.solicitud;
 
 
-        // EPIs
-        const tabla = document.getElementById("tablaEPIs");
+        // ==================================================
+        // DATOS GENERALES EN HTML
+        // ==================================================
+
+        document.getElementById(
+            "idSolicitud"
+        ).textContent =
+            solicitud.id || "";
+
+
+        document.getElementById(
+            "fechaSolicitud"
+        ).textContent =
+            solicitud.fecha || "";
+
+
+        document.getElementById(
+            "numeroOperario"
+        ).textContent =
+            solicitud.numeroOperario || "";
+
+
+        document.getElementById(
+            "trabajador"
+        ).textContent =
+            solicitud.trabajador || "";
+
+
+        document.getElementById(
+            "area"
+        ).textContent =
+            solicitud.area || "";
+
+
+        document.getElementById(
+            "puesto"
+        ).textContent =
+            solicitud.puesto || "";
+
+
+        document.getElementById(
+            "motivo"
+        ).textContent =
+            solicitud.motivo || "";
+
+
+        // ==================================================
+        // TABLA DE EPIs
+        // ==================================================
+
+        const tabla =
+            document.getElementById(
+                "tablaEPIs"
+            );
+
 
         tabla.innerHTML = "";
 
-        datos.epis.forEach(epi => {
 
-            const fila = document.createElement("tr");
+        datos.epis.forEach(
+            epi => {
 
-            fila.innerHTML = `
-                <td>${epi.epi || ""}</td>
-                <td>${epi.modelo || ""}</td>
-                <td>${epi.cantidad || ""}</td>
-            `;
+                const fila =
+                    document.createElement(
+                        "tr"
+                    );
 
-            tabla.appendChild(fila);
 
-        });
+                fila.innerHTML = `
+                    <td>${epi.epi || ""}</td>
+                    <td>${epi.modelo || ""}</td>
+                    <td>${epi.cantidad || ""}</td>
+                `;
+
+
+                tabla.appendChild(
+                    fila
+                );
+
+            }
+        );
+
+
+        // ==================================================
+        // GENERAR PDF CON LOS DATOS REALES
+        // ==================================================
+
+        await generarPDFSolicitud(
+            datos
+        );
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
+
 
         mostrarError(
             "No se ha podido cargar la solicitud."
         );
     }
 }
+
+
 // ======================================================
 // FIRMAR
 // ======================================================
@@ -307,8 +615,11 @@ btnFirmar.addEventListener(
     "click",
     async function () {
 
-        mensajeError.style.display = "none";
+        mensajeError.style.display =
+            "none";
 
+
+        // Comprobar firma
         if (!hayFirma) {
 
             mostrarError(
@@ -318,6 +629,8 @@ btnFirmar.addEventListener(
             return;
         }
 
+
+        // Comprobar aceptación
         if (!aceptacion.checked) {
 
             mostrarError(
@@ -327,6 +640,8 @@ btnFirmar.addEventListener(
             return;
         }
 
+
+        // Comprobar solicitud
         if (!idSolicitud) {
 
             mostrarError(
@@ -337,59 +652,59 @@ btnFirmar.addEventListener(
         }
 
 
-        // Si todavía no hemos conectado Power Automate,
-        // simplemente mostramos la firma capturada.
-
-        if (!POWER_AUTOMATE_URL_FIRMA) {
-
-            const firma = canvas.toDataURL("image/png");
-
-            console.log("Solicitud:", idSolicitud);
-            console.log("Firma:", firma);
-
-            mensajeExito.style.display = "block";
-
-            btnFirmar.disabled = true;
-
-            return;
-        }
-
-
         // ==================================================
-        // ENVIAR A POWER AUTOMATE
+        // CAPTURAR FIRMA
         // ==================================================
 
-        const firma = canvas.toDataURL("image/png");
+        const firma =
+            canvas.toDataURL(
+                "image/png"
+            );
+
 
         const payload = {
 
-            IDSolicitud: idSolicitud,
+            IDSolicitud:
+                idSolicitud,
 
-            Firma: firma,
+            Firma:
+                firma,
 
-            FechaFirma: new Date().toISOString()
+            FechaFirma:
+                new Date().toISOString()
 
         };
 
 
         btnFirmar.disabled = true;
-        btnFirmar.textContent = "Procesando...";
+
+        btnFirmar.textContent =
+            "Procesando...";
 
 
         try {
 
-            const response = await fetch(
-                POWER_AUTOMATE_URL_FIRMA,
-                {
-                    method: "POST",
+            // ==================================================
+            // ENVIAR FIRMA A POWER AUTOMATE
+            // ==================================================
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+            const response =
+                await fetch(
+                    POWER_AUTOMATE_URL_FIRMA,
+                    {
+                        method: "POST",
 
-                    body: JSON.stringify(payload)
-                }
-            );
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify(
+                                payload
+                            )
+                    }
+                );
 
 
             if (!response.ok) {
@@ -400,7 +715,9 @@ btnFirmar.addEventListener(
             }
 
 
-            mensajeExito.style.display = "block";
+            mensajeExito.style.display =
+                "block";
+
 
             btnFirmar.textContent =
                 "Documento firmado";
@@ -408,13 +725,19 @@ btnFirmar.addEventListener(
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                error
+            );
+
 
             mostrarError(
                 "No se ha podido registrar la firma. Inténtelo de nuevo."
             );
 
-            btnFirmar.disabled = false;
+
+            btnFirmar.disabled =
+                false;
+
 
             btnFirmar.textContent =
                 "Firmar y confirmar entrega";
@@ -430,171 +753,16 @@ btnFirmar.addEventListener(
 
 function mostrarError(mensaje) {
 
-    mensajeError.textContent = mensaje;
+    mensajeError.textContent =
+        mensaje;
 
-    mensajeError.style.display = "block";
+    mensajeError.style.display =
+        "block";
 }
+
+
+// ======================================================
+// INICIAR
+// ======================================================
 
 cargarSolicitud();
-
-async function generarPDFSolicitud(datos) {
-
-    try {
-
-        // 1. Descargar el PDF original
-        const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
-
-        if (!respuestaPDF.ok) {
-            throw new Error('No se ha podido cargar el PDF original');
-        }
-
-        const pdfBytes = await respuestaPDF.arrayBuffer();
-
-        // 2. Abrir PDF con pdf-lib
-        const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-
-        // 3. Obtener formulario
-        const form = pdfDoc.getForm();
-
-        const solicitud = datos.solicitud;
-        const epis = datos.epis;
-
-        // 4. Rellenar datos generales
-        form.getTextField('Textbox1').setText(solicitud.fecha || '');
-        form.getTextField('Textbox2').setText(solicitud.area || '');
-        form.getTextField('Textbox3').setText(solicitud.trabajador || '');
-        form.getTextField('Textbox4').setText(solicitud.puesto || '');
-
-        // 5. Rellenar EPIs
-        epis.forEach((epi, index) => {
-
-            const fila = index + 1;
-
-            // De momento probamos con esta correspondencia
-            const campoEPI = `Textbox${4 + fila}`;
-            const campoCantidad = `Textbox${12 + fila}`;
-
-            try {
-                form.getTextField(campoEPI).setText(epi.epi || '');
-                form.getTextField(campoCantidad).setText(String(epi.cantidad || ''));
-            } catch (e) {
-                console.log(`No se pudo rellenar la fila ${fila}`, e);
-            }
-        });
-
-        // 6. Aplanar los campos
-        form.flatten();
-
-        // 7. Generar nuevo PDF
-        const pdfFinal = await pdfDoc.save();
-
-        // 8. Crear URL temporal
-        const blob = new Blob([pdfFinal], {
-            type: 'application/pdf'
-        });
-
-        return URL.createObjectURL(blob);
-
-    } catch (error) {
-
-        console.error('Error generando PDF:', error);
-        alert('No se ha podido generar el PDF.');
-
-        return null;
-    }
-}
-
-async function generarPDFSolicitud(datos) {
-
-    const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
-    const pdfBytes = await respuestaPDF.arrayBuffer();
-
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
-    const form = pdfDoc.getForm();
-
-    // =========================
-    // DATOS DEL TRABAJADOR
-    // =========================
-
-    form.getTextField('Textbox2').setText(
-        datos.solicitud.area || ''
-    );
-
-    form.getTextField('Textbox3').setText(
-        datos.solicitud.trabajador || ''
-    );
-
-    form.getTextField('Textbox4').setText(
-        datos.solicitud.puesto || ''
-    );
-
-
-    // =========================
-    // EPIs
-    // =========================
-
-    // Campos de descripción de EPI
-    const camposEPI = [
-        'Textbox1',
-        'Textbox5',
-        'Textbox6',
-        'Textbox7',
-        'Textbox8',
-        'Textbox9',
-        'Textbox10',
-        'Textbox11',
-        'Textbox12'
-    ];
-
-    // Campos de cantidad
-    const camposCantidad = [
-        'Textbox13',
-        'Textbox14',
-        'Textbox15',
-        'Textbox16',
-        'Textbox17',
-        'Textbox18',
-        'Textbox19',
-        'Textbox20',
-        'Textbox21'
-    ];
-
-
-    datos.epis.forEach((epi, index) => {
-
-        // El PDF tiene 9 líneas
-        if (index >= 9) return;
-
-        form.getTextField(camposEPI[index]).setText(
-            epi.epi || ''
-        );
-
-        form.getTextField(camposCantidad[index]).setText(
-            String(epi.cantidad || '')
-        );
-
-    });
-
-
-    // =========================
-    // GENERAR PDF
-    // =========================
-
-    form.flatten();
-
-    const pdfFinal = await pdfDoc.save();
-
-    const blob = new Blob(
-        [pdfFinal],
-        { type: 'application/pdf' }
-    );
-
-    const url = URL.createObjectURL(blob);
-
-    // Mostrar PDF en la misma página
-    document.getElementById('visorPDF').src = url;
-
-    return pdfFinal;
-}
-
-generarPDFSolicitud(datos);
