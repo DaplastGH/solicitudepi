@@ -1,41 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>DAPLAST - Solicitud de EPI</title>
+
+
+  <!-- Select2 -->
 
   <link
     href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
     rel="stylesheet"
   >
 
-  <link rel="stylesheet" href="styles.css">
+
+  <!-- CSS propio -->
+
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  >
+
 </head>
+
 
 <body>
 
+
   <main class="page-container">
+
 
     <div class="solicitud-box">
 
+
+      <!-- ================================================= -->
       <!-- LOGO -->
+      <!-- ================================================= -->
+
       <div class="logo-daplast">
+
         <img
           src="https://daplast.com/wp-content/uploads/2022/06/logo-daplast.png"
           alt="Logo DAPLAST"
         >
-      </div>
 
-      <h1>Solicitud de entrega de EPI</h1>
+      </div>
 
 
       <!-- ================================================= -->
-      <!-- FORMULARIO DE SOLICITUD -->
+      <!-- TÍTULO -->
+      <!-- ================================================= -->
+
+      <h1>
+        Solicitud de entrega de EPI
+      </h1>
+
+
+      <!-- ================================================= -->
+      <!-- FORMULARIO -->
       <!-- ================================================= -->
 
       <div id="formularioSolicitud">
+
 
         <!-- ========================= -->
         <!-- DATOS DEL TRABAJADOR -->
@@ -45,12 +78,15 @@
           Datos del trabajador
         </div>
 
+
         <div class="form-row">
+
 
           <div class="form-group">
 
             <label for="numeroOperario">
-              Nº de operario <span class="required">*</span>
+              Nº de operario
+              <span class="required">*</span>
             </label>
 
             <input
@@ -66,7 +102,8 @@
           <div class="form-group">
 
             <label for="trabajador">
-              Nombre del trabajador <span class="required">*</span>
+              Nombre del trabajador
+              <span class="required">*</span>
             </label>
 
             <input
@@ -78,15 +115,18 @@
 
           </div>
 
+
         </div>
 
 
         <div class="form-row">
 
+
           <div class="form-group">
 
             <label for="area">
-              Área / Departamento <span class="required">*</span>
+              Área / Departamento
+              <span class="required">*</span>
             </label>
 
             <input
@@ -102,7 +142,8 @@
           <div class="form-group">
 
             <label for="puesto">
-              Puesto de trabajo <span class="required">*</span>
+              Puesto de trabajo
+              <span class="required">*</span>
             </label>
 
             <input
@@ -113,6 +154,7 @@
             >
 
           </div>
+
 
         </div>
 
@@ -125,33 +167,54 @@
           Motivo de la entrega
         </div>
 
+
         <div class="form-group">
 
+
           <label for="motivo">
-            Motivo <span class="required">*</span>
+
+            Motivo
+
+            <span class="required">
+              *
+            </span>
+
           </label>
 
-          <select id="motivo" required>
 
-            <option value="" selected disabled>
+          <select
+            id="motivo"
+            required
+          >
+
+            <option
+              value=""
+              selected
+              disabled
+            >
               Seleccione un motivo
             </option>
+
 
             <option value="1ª entrega">
               1ª entrega
             </option>
 
+
             <option value="Cambio E.P.I.">
               Cambio E.P.I.
             </option>
+
 
             <option value="Deterioro">
               Deterioro
             </option>
 
+
             <option value="Pérdida">
               Pérdida
             </option>
+
 
             <option value="Otros">
               Otros
@@ -159,11 +222,12 @@
 
           </select>
 
+
         </div>
 
 
         <!-- ========================= -->
-        <!-- MOTIVO OTROS -->
+        <!-- OTROS -->
         <!-- ========================= -->
 
         <div
@@ -175,6 +239,7 @@
           <label for="otroMotivo">
             Especificar motivo
           </label>
+
 
           <input
             type="text"
@@ -190,12 +255,18 @@
         <!-- ========================= -->
 
         <div class="section-title">
+
           Equipos de protección individual
+
         </div>
+
 
         <div id="epis-container">
 
-          <!-- Los EPIs se crean dinámicamente mediante JavaScript -->
+          <!--
+            Los EPIs se generan
+            dinámicamente con JavaScript
+          -->
 
         </div>
 
@@ -215,11 +286,13 @@
 
         <div class="summary-box">
 
+
           <div>
 
             <strong>
               EPIs seleccionados
             </strong>
+
 
             <span id="numeroEPIs">
               0
@@ -227,11 +300,12 @@
 
           </div>
 
+
         </div>
 
 
         <!-- ========================= -->
-        <!-- CREAR SOLICITUD -->
+        <!-- CREAR -->
         <!-- ========================= -->
 
         <button
@@ -255,11 +329,13 @@
 
           <div class="loader"></div>
 
+
           <p>
             Creando solicitud...
           </p>
 
         </div>
+
 
       </div>
 
@@ -274,54 +350,20 @@
         style="display:none;"
       >
 
+
         <h2>
           Solicitud creada correctamente
         </h2>
 
 
         <p>
-          La solicitud se ha registrado correctamente.
+          Número de solicitud
         </p>
 
 
-        <!-- NÚMERO -->
+        <strong id="numeroSolicitud">
+        </strong>
 
-        <div class="resultado-dato">
-
-          <span>
-            Número de solicitud
-          </span>
-
-          <strong id="numeroSolicitud">
-          </strong>
-
-        </div>
-
-
-        <!-- ESTADO -->
-
-        <div class="resultado-dato">
-
-          <span>
-            Estado
-          </span>
-
-          <strong>
-            Pendiente de entrega y firma
-          </strong>
-
-        </div>
-
-
-        <!-- MENSAJE -->
-
-        <p>
-          Una vez realizada la entrega de los EPI,
-          RRHH podrá gestionar la firma del trabajador.
-        </p>
-
-
-        <!-- NUEVA SOLICITUD -->
 
         <button
           type="button"
@@ -331,22 +373,41 @@
           Nueva solicitud
         </button>
 
+
       </div>
 
+
     </div>
+
 
   </main>
 
 
   <!-- ================================================= -->
-  <!-- LIBRERÍAS -->
+  <!-- JQUERY -->
   <!-- ================================================= -->
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+  ></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <!-- ================================================= -->
+  <!-- SELECT2 -->
+  <!-- ================================================= -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"
+  ></script>
+
+
+  <!-- ================================================= -->
+  <!-- JAVASCRIPT PROPIO -->
+  <!-- ================================================= -->
 
   <script src="script.js"></script>
 
+
 </body>
+
 </html>
