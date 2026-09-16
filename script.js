@@ -777,35 +777,59 @@ async function crearSolicitud() {
 // MOSTRAR RESULTADO
 // ======================================================
 
+// ======================================================
+// MOSTRAR RESULTADO
+// ======================================================
+
 function mostrarResultado(resultado) {
 
-  document.getElementById(
-    "resultado"
-  ).style.display = "block";
+  // Ocultar formulario completo
+  document.querySelector(".section-title").parentElement;
+
+  document.querySelectorAll(
+    ".section-title, .form-row, #bloqueOtroMotivo, " +
+    "#epis-container, #btnAgregarEPI, .summary-box, " +
+    "#btnCrearSolicitud"
+  ).forEach(elemento => {
+    elemento.style.display = "none";
+  });
 
 
+  // Mostrar resultado
+  const resultadoBox =
+    document.getElementById("resultado");
+
+  resultadoBox.style.display = "block";
+
+
+  // Número de solicitud
   document.getElementById(
     "numeroSolicitud"
   ).innerText =
     resultado.numeroSolicitud || "";
 
 
+  // Enlace de firma
   document.getElementById(
     "enlaceFirma"
   ).value =
     resultado.enlaceFirma || "";
 
 
-  // Ocultamos formulario
+  // Cambiar título principal
+  const titulo =
+    document.querySelector("h1");
 
-  document.querySelector(
-    ".section-title"
-  );
+  if (titulo) {
+    titulo.innerText =
+      "Solicitud creada correctamente";
+  }
 
 
-  window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
+  // Ir al resultado
+  resultadoBox.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
   });
 
 }
