@@ -506,31 +506,50 @@ async function generarPDFSolicitud(datos) {
 
 async function probarPDF() {
 
-    const respuestaPDF = await fetch(
-    'Reg%20Entrega%20EPIS%20editable.pdf'
-    );
-
+    const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
     const pdfBytes = await respuestaPDF.arrayBuffer();
 
     const pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
     const form = pdfDoc.getForm();
 
-    // Datos de prueba
-    form.getTextField('Textbox2').setText('INSTALACIONES-VALENCIA');
-    form.getTextField('Textbox3').setText('JUAN JOSE BELMONTE AGUILERA');
-    form.getTextField('Textbox4').setText('PEÓN INSTALADOR');
+    // =========================
+    // DATOS PRINCIPALES
+    // =========================
 
-    // Convertir los campos en texto normal
+    form.getTextField('Textbox1').setText('PRUEBA EPI');
+    form.getTextField('Textbox2').setText('PRUEBA ÁREA');
+    form.getTextField('Textbox3').setText('PRUEBA TRABAJADOR');
+    form.getTextField('Textbox4').setText('PRUEBA PUESTO');
+
+
+    // =========================
+    // EPIs DE PRUEBA
+    // =========================
+
+    form.getTextField('Textbox5').setText('EPI PRUEBA 2');
+    form.getTextField('Textbox6').setText('EPI PRUEBA 3');
+
+    form.getTextField('Textbox13').setText('1');
+    form.getTextField('Textbox14').setText('2');
+    form.getTextField('Textbox15').setText('3');
+
+
+    // =========================
+    // GENERAR PDF
+    // =========================
+
     form.flatten();
 
-    // Crear el nuevo PDF
     const pdfFinal = await pdfDoc.save();
 
-    // Abrirlo
-    const blob = new Blob([pdfFinal], { type: 'application/pdf' });
-const url = URL.createObjectURL(blob);
+    const blob = new Blob(
+        [pdfFinal],
+        { type: 'application/pdf' }
+    );
 
-document.getElementById("visorPDF").src = url;
+    const url = URL.createObjectURL(blob);
+
+    // Mostrar dentro de la misma página
+    document.getElementById('visorPDF').src = url;
 }
-
 probarPDF();
