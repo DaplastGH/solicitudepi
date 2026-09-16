@@ -37,6 +37,7 @@ const ctx = canvas.getContext("2d");
 
 let dibujando = false;
 let hayFirma = false;
+let pdfActual = null;
 
 
 // Ajustar resolución del canvas
@@ -364,6 +365,7 @@ async function generarPDFSolicitud(datos) {
 
         const pdfFinal =
             await pdfDoc.save();
+        pdfActual = pdfFinal;
 
 
         // ==================================================
@@ -651,7 +653,103 @@ btnFirmar.addEventListener(
             return;
         }
 
+// ==================================================
+// INCORPORAR FIRMA AL PDF
+// ==================================================
 
+if (!pdfActual) {
+
+    mostrarError(
+        "El PDF todavía no está disponible."
+    );
+
+    return;
+}
+
+try {
+
+    btnFirmar.disabled = true;
+    btnFirmar.textContent = "Generando documento...";
+
+    // Cargar el PDF que ya hemos rellenado
+    const pdfDoc = await PDFLib.PDFDocument.load(pdfActual);
+
+    const pagina = pdfDoc.getPages()[0];
+
+    // Obtener firma del canvas
+    const firmaData = canvas.toDataURL("image/png");
+
+    // Convertir la firma a bytes
+    const firmaBytes = await fetch(firmaData)
+        .then(res => res.arrayBuffer());
+
+    // Insertar firma como imagen PNG
+    const firmaImagen = await pdfDoc.embedPng(firmaBytes);
+
+    // Tamaño de la firma
+    const anchoFirma = 130;
+    const altoFirma = 50;
+
+    // Posición de la firma en el documento
+    pagina.drawImage(firmaImagen, {
+        x: 115,
+        y: 50,
+        width: anchoFirma,
+        height: altoFirma
+    });
+
+    // Fecha de firma
+    const fechaFirma = new Date().toLocaleDateString("es-ES");
+
+    pagina.drawText(fechaFirma, {
+        x: 260,
+        y: 65,
+        size: 9
+    });
+
+    // Guardar PDF definitivo
+    const pdfFirmado = await pdfDoc.save();
+
+    // Mostrar PDF firmado en el visor
+    const blob = new Blob(
+        [pdfFirmado],
+        {
+            type: "application/pdf"
+        }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    document.getElementById("visorPDF").src = url;
+
+    // Guardarlo para el siguiente paso
+    pdfActual = pdfFirmado;
+
+    btnFirmar.textContent =
+        "Documento firmado";
+
+    mensajeExito.style.display = "block";
+
+    console.log(
+        "PDF firmado correctamente"
+    );
+return;
+} catch (error) {
+
+    console.error(
+        "Error incorporando firma al PDF:",
+        error
+    );
+
+    mostrarError(
+        "No se ha podido incorporar la firma al documento."
+    );
+
+    btnFirmar.disabled = false;
+
+    btnFirmar.textContent =
+        "Firmar y confirmar entrega";
+}
         // ==================================================
         // CAPTURAR FIRMA
         // ==================================================
