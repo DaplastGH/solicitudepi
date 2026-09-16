@@ -504,7 +504,7 @@ async function generarPDFSolicitud(datos) {
     }
 }
 
-async function probarPDF() {
+async function generarPDFSolicitud(datos) {
 
     const respuestaPDF = await fetch('Reg%20Entrega%20EPIS%20editable.pdf');
     const pdfBytes = await respuestaPDF.arrayBuffer();
@@ -513,25 +513,67 @@ async function probarPDF() {
     const form = pdfDoc.getForm();
 
     // =========================
-    // DATOS PRINCIPALES
+    // DATOS DEL TRABAJADOR
     // =========================
 
-    form.getTextField('Textbox1').setText('PRUEBA EPI');
-    form.getTextField('Textbox2').setText('PRUEBA ÁREA');
-    form.getTextField('Textbox3').setText('PRUEBA TRABAJADOR');
-    form.getTextField('Textbox4').setText('PRUEBA PUESTO');
+    form.getTextField('Textbox2').setText(
+        datos.solicitud.area || ''
+    );
+
+    form.getTextField('Textbox3').setText(
+        datos.solicitud.trabajador || ''
+    );
+
+    form.getTextField('Textbox4').setText(
+        datos.solicitud.puesto || ''
+    );
 
 
     // =========================
-    // EPIs DE PRUEBA
+    // EPIs
     // =========================
 
-    form.getTextField('Textbox5').setText('EPI PRUEBA 2');
-    form.getTextField('Textbox6').setText('EPI PRUEBA 3');
+    // Campos de descripción de EPI
+    const camposEPI = [
+        'Textbox1',
+        'Textbox5',
+        'Textbox6',
+        'Textbox7',
+        'Textbox8',
+        'Textbox9',
+        'Textbox10',
+        'Textbox11',
+        'Textbox12'
+    ];
 
-    form.getTextField('Textbox13').setText('1');
-    form.getTextField('Textbox14').setText('2');
-    form.getTextField('Textbox15').setText('3');
+    // Campos de cantidad
+    const camposCantidad = [
+        'Textbox13',
+        'Textbox14',
+        'Textbox15',
+        'Textbox16',
+        'Textbox17',
+        'Textbox18',
+        'Textbox19',
+        'Textbox20',
+        'Textbox21'
+    ];
+
+
+    datos.epis.forEach((epi, index) => {
+
+        // El PDF tiene 9 líneas
+        if (index >= 9) return;
+
+        form.getTextField(camposEPI[index]).setText(
+            epi.epi || ''
+        );
+
+        form.getTextField(camposCantidad[index]).setText(
+            String(epi.cantidad || '')
+        );
+
+    });
 
 
     // =========================
@@ -549,7 +591,10 @@ async function probarPDF() {
 
     const url = URL.createObjectURL(blob);
 
-    // Mostrar dentro de la misma página
+    // Mostrar PDF en la misma página
     document.getElementById('visorPDF').src = url;
+
+    return pdfFinal;
 }
-probarPDF();
+
+generarPDFSolicitud(datos);
