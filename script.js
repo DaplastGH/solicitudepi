@@ -10,11 +10,6 @@ const POWER_AUTOMATE_URL = "https://default9057cb6da67347c7b025e86c6b54bd.2d.env
 // MODELOS DE EPI
 // ======================================================
 
-// Puedes modificar esta lista fácilmente.
-//
-// Si un EPI no tiene modelo,
-// simplemente dejamos el array vacío.
-
 const modelosEPI = {
 
   "Guantes": [
@@ -50,32 +45,49 @@ const modelosEPI = {
 
 document.addEventListener("DOMContentLoaded", () => {
 
+
   // Motivo
+
   document
     .getElementById("motivo")
-    .addEventListener("change", cambiarMotivo);
+    .addEventListener(
+      "change",
+      cambiarMotivo
+    );
+
 
   // Añadir EPI
+
   document
     .getElementById("btnAgregarEPI")
-    .addEventListener("click", agregarEPI);
+    .addEventListener(
+      "click",
+      agregarEPI
+    );
+
 
   // Crear solicitud
+
   document
     .getElementById("btnCrearSolicitud")
-    .addEventListener("click", crearSolicitud);
+    .addEventListener(
+      "click",
+      crearSolicitud
+    );
 
-  // Copiar enlace
-  document
-    .getElementById("btnCopiarEnlace")
-    .addEventListener("click", copiarEnlace);
 
   // Nueva solicitud
+
   document
     .getElementById("btnNuevaSolicitud")
-    .addEventListener("click", nuevaSolicitud);
+    .addEventListener(
+      "click",
+      nuevaSolicitud
+    );
 
-  // Añadimos automáticamente el primer EPI
+
+  // Primer EPI automáticamente
+
   agregarEPI();
 
 });
@@ -87,11 +99,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function cambiarMotivo() {
 
+
   const motivo =
-    document.getElementById("motivo").value;
+    document
+      .getElementById("motivo")
+      .value;
+
 
   const bloque =
-    document.getElementById("bloqueOtroMotivo");
+    document
+      .getElementById("bloqueOtroMotivo");
+
 
   if (motivo === "Otros") {
 
@@ -101,7 +119,9 @@ function cambiarMotivo() {
 
     bloque.style.display = "none";
 
-    document.getElementById("otroMotivo").value = "";
+    document
+      .getElementById("otroMotivo")
+      .value = "";
 
   }
 
@@ -114,32 +134,55 @@ function cambiarMotivo() {
 
 function agregarEPI() {
 
+
   const container =
-    document.getElementById("epis-container");
+    document
+      .getElementById("epis-container");
+
 
   const epiBox =
     document.createElement("div");
 
-  epiBox.className = "epi-box";
+
+  epiBox.className =
+    "epi-box";
 
 
-  // Opciones EPI
+  // ================================================
+  // OPCIONES DE EPI
+  // ================================================
 
-  let opcionesEPI =
-    `<option value="" selected disabled>
-       Seleccione un EPI
-     </option>`;
+  let opcionesEPI = `
 
-  Object.keys(modelosEPI).forEach(epi => {
+    <option
+      value=""
+      selected
+      disabled
+    >
+      Seleccione un EPI
+    </option>
 
-    opcionesEPI += `
-      <option value="${epi}">
-        ${epi}
-      </option>
-    `;
+  `;
 
-  });
 
+  Object.keys(modelosEPI)
+    .forEach(epi => {
+
+
+      opcionesEPI += `
+
+        <option value="${epi}">
+          ${epi}
+        </option>
+
+      `;
+
+    });
+
+
+  // ================================================
+  // HTML DEL EPI
+  // ================================================
 
   epiBox.innerHTML = `
 
@@ -162,13 +205,16 @@ function agregarEPI() {
 
     <div class="form-row">
 
+
       <!-- EPI -->
 
       <div class="form-group">
 
         <label>
-          EPI <span class="required">*</span>
+          EPI
+          <span class="required">*</span>
         </label>
+
 
         <select class="epi-select">
 
@@ -190,6 +236,7 @@ function agregarEPI() {
           Modelo
         </label>
 
+
         <select class="modelo-select">
 
           <option value="">
@@ -206,8 +253,15 @@ function agregarEPI() {
       <div class="form-group">
 
         <label>
-          Cantidad <span class="required">*</span>
+
+          Cantidad
+
+          <span class="required">
+            *
+          </span>
+
         </label>
+
 
         <input
           type="number"
@@ -219,58 +273,90 @@ function agregarEPI() {
 
       </div>
 
+
     </div>
 
   `;
 
 
-  container.appendChild(epiBox);
+  container.appendChild(
+    epiBox
+  );
 
 
-  // Inicializar Select2
+  // ================================================
+  // SELECT2
+  // ================================================
 
   const epiSelect =
-    epiBox.querySelector(".epi-select");
-
-  const modeloSelect =
-    epiBox.querySelector(".modelo-select");
-
-  $(epiSelect).select2({
-    width: "100%",
-    placeholder: "Seleccione un EPI",
-    language: "es"
-  });
-
-  $(modeloSelect).select2({
-    width: "100%",
-    placeholder: "Seleccione un modelo",
-    language: "es"
-  });
-
-
-  // Cambio de EPI
-
-  $(epiSelect).on("change", function () {
-
-    actualizarModelos(
-      epiBox,
-      this.value
+    epiBox.querySelector(
+      ".epi-select"
     );
 
+
+  const modeloSelect =
+    epiBox.querySelector(
+      ".modelo-select"
+    );
+
+
+  $(epiSelect).select2({
+
+    width: "100%",
+
+    placeholder:
+      "Seleccione un EPI",
+
+    language: "es"
+
   });
 
 
-  // Eliminar
+  $(modeloSelect).select2({
+
+    width: "100%",
+
+    placeholder:
+      "Seleccione un modelo",
+
+    language: "es"
+
+  });
+
+
+  // ================================================
+  // CAMBIO DE EPI
+  // ================================================
+
+  $(epiSelect).on(
+    "change",
+    function () {
+
+      actualizarModelos(
+        epiBox,
+        this.value
+      );
+
+    }
+  );
+
+
+  // ================================================
+  // ELIMINAR
+  // ================================================
 
   epiBox
     .querySelector(".remove-btn")
-    .addEventListener("click", () => {
+    .addEventListener(
+      "click",
+      () => {
 
-      epiBox.remove();
+        epiBox.remove();
 
-      actualizarNumeroEPIs();
+        actualizarNumeroEPIs();
 
-    });
+      }
+    );
 
 
   actualizarNumeroEPIs();
@@ -287,53 +373,81 @@ function actualizarModelos(
   epiSeleccionado
 ) {
 
+
   const modeloGroup =
-    epiBox.querySelector(".modelo-group");
-
-  const modeloSelect =
-    epiBox.querySelector(".modelo-select");
-
-
-  const modelos =
-    modelosEPI[epiSeleccionado] || [];
-
-
-  // Limpiar modelos
-
-  $(modeloSelect)
-    .empty()
-    .append(
-      `<option value="">
-        Seleccione un modelo
-       </option>`
+    epiBox.querySelector(
+      ".modelo-group"
     );
 
 
-  // Si tiene modelos
+  const modeloSelect =
+    epiBox.querySelector(
+      ".modelo-select"
+    );
+
+
+  const modelos =
+    modelosEPI[
+      epiSeleccionado
+    ] || [];
+
+
+  // ================================================
+  // LIMPIAR
+  // ================================================
+
+  $(modeloSelect)
+    .empty()
+    .append(`
+
+      <option value="">
+        Seleccione un modelo
+      </option>
+
+    `);
+
+
+  // ================================================
+  // TIENE MODELOS
+  // ================================================
 
   if (modelos.length > 0) {
 
-    modeloGroup.style.display = "flex";
+
+    modeloGroup.style.display =
+      "flex";
 
 
-    modelos.forEach(modelo => {
+    modelos.forEach(
+      modelo => {
 
-      $(modeloSelect).append(
-        `<option value="${modelo}">
-          ${modelo}
-         </option>`
-      );
+        $(modeloSelect)
+          .append(`
 
-    });
+            <option value="${modelo}">
+              ${modelo}
+            </option>
+
+          `);
+
+      }
+    );
 
 
   } else {
 
-    // No tiene modelo
 
-    modeloGroup.style.display = "none";
+    // ============================================
+    // NO TIENE MODELO
+    // ============================================
 
-    $(modeloSelect).val("").trigger("change");
+    modeloGroup.style.display =
+      "none";
+
+
+    $(modeloSelect)
+      .val("")
+      .trigger("change");
 
   }
 
@@ -346,12 +460,17 @@ function actualizarModelos(
 
 function actualizarNumeroEPIs() {
 
+
   const numero =
-    document.querySelectorAll(".epi-box").length;
+    document.querySelectorAll(
+      ".epi-box"
+    ).length;
+
 
   document.getElementById(
     "numeroEPIs"
-  ).innerText = numero;
+  ).innerText =
+    numero;
 
 }
 
@@ -362,67 +481,110 @@ function actualizarNumeroEPIs() {
 
 function obtenerDatosFormulario() {
 
+
   const numeroOperario =
     document
-      .getElementById("numeroOperario")
-      .value.trim();
+      .getElementById(
+        "numeroOperario"
+      )
+      .value
+      .trim();
+
 
   const trabajador =
     document
-      .getElementById("trabajador")
-      .value.trim();
+      .getElementById(
+        "trabajador"
+      )
+      .value
+      .trim();
+
 
   const area =
     document
-      .getElementById("area")
-      .value.trim();
+      .getElementById(
+        "area"
+      )
+      .value
+      .trim();
+
 
   const puesto =
     document
-      .getElementById("puesto")
-      .value.trim();
+      .getElementById(
+        "puesto"
+      )
+      .value
+      .trim();
+
 
   const motivo =
     document
-      .getElementById("motivo")
+      .getElementById(
+        "motivo"
+      )
       .value;
+
 
   const otroMotivo =
     document
-      .getElementById("otroMotivo")
-      .value.trim();
+      .getElementById(
+        "otroMotivo"
+      )
+      .value
+      .trim();
 
 
   const epis = [];
+
 
   let error = false;
 
 
   document
-    .querySelectorAll(".epi-box")
+    .querySelectorAll(
+      ".epi-box"
+    )
     .forEach(box => {
+
 
       const epi =
         box
-          .querySelector(".epi-select")
+          .querySelector(
+            ".epi-select"
+          )
           .value;
+
 
       const modelo =
         box
-          .querySelector(".modelo-select")
+          .querySelector(
+            ".modelo-select"
+          )
           .value;
+
 
       const cantidad =
         parseInt(
           box
-            .querySelector(".cantidad-input")
+            .querySelector(
+              ".cantidad-input"
+            )
             .value
         ) || 0;
 
 
+      // ==========================================
+      // EPI OBLIGATORIO
+      // ==========================================
+
       if (!epi) {
 
-        alert("Debe seleccionar todos los EPIs.");
+
+        alert(
+          "Debe seleccionar todos los EPIs."
+        );
+
 
         error = true;
 
@@ -431,12 +593,18 @@ function obtenerDatosFormulario() {
       }
 
 
+      // ==========================================
+      // CANTIDAD
+      // ==========================================
+
       if (cantidad <= 0) {
+
 
         alert(
           "La cantidad de cada EPI debe ser mayor que 0."
         );
 
+
         error = true;
 
         return;
@@ -444,7 +612,9 @@ function obtenerDatosFormulario() {
       }
 
 
-      // Si tiene modelos, obligamos a seleccionar uno
+      // ==========================================
+      // MODELO
+      // ==========================================
 
       const modelosDisponibles =
         modelosEPI[epi] || [];
@@ -455,9 +625,11 @@ function obtenerDatosFormulario() {
         !modelo
       ) {
 
+
         alert(
           `Debe seleccionar el modelo de ${epi}.`
         );
+
 
         error = true;
 
@@ -466,13 +638,19 @@ function obtenerDatosFormulario() {
       }
 
 
+      // ==========================================
+      // AÑADIR EPI
+      // ==========================================
+
       epis.push({
 
         EPI: epi,
 
-        Modelo: modelo || "",
+        Modelo:
+          modelo || "",
 
-        Cantidad: cantidad
+        Cantidad:
+          cantidad
 
       });
 
@@ -480,28 +658,36 @@ function obtenerDatosFormulario() {
 
 
   if (error) {
+
     return null;
+
   }
 
 
   return {
 
-    NumeroOperario: numeroOperario,
+    NumeroOperario:
+      numeroOperario,
 
-    Trabajador: trabajador,
+    Trabajador:
+      trabajador,
 
-    Area: area,
+    Area:
+      area,
 
-    Puesto: puesto,
+    Puesto:
+      puesto,
 
-    Motivo: motivo,
+    Motivo:
+      motivo,
 
     OtroMotivo:
       motivo === "Otros"
         ? otroMotivo
         : "",
 
-    EPIs: epis
+    EPIs:
+      epis
 
   };
 
@@ -512,13 +698,18 @@ function obtenerDatosFormulario() {
 // VALIDACIÓN
 // ======================================================
 
-function validarFormulario(datos) {
+function validarFormulario(
+  datos
+) {
+
 
   if (!datos.NumeroOperario) {
+
 
     alert(
       "Debe introducir el número de operario."
     );
+
 
     return false;
 
@@ -527,9 +718,11 @@ function validarFormulario(datos) {
 
   if (!datos.Trabajador) {
 
+
     alert(
       "Debe introducir el nombre del trabajador."
     );
+
 
     return false;
 
@@ -538,9 +731,11 @@ function validarFormulario(datos) {
 
   if (!datos.Area) {
 
+
     alert(
       "Debe introducir el área o departamento."
     );
+
 
     return false;
 
@@ -549,9 +744,11 @@ function validarFormulario(datos) {
 
   if (!datos.Puesto) {
 
+
     alert(
       "Debe introducir el puesto de trabajo."
     );
+
 
     return false;
 
@@ -560,9 +757,11 @@ function validarFormulario(datos) {
 
   if (!datos.Motivo) {
 
+
     alert(
       "Debe seleccionar el motivo de la entrega."
     );
+
 
     return false;
 
@@ -574,20 +773,26 @@ function validarFormulario(datos) {
     !datos.OtroMotivo
   ) {
 
+
     alert(
       "Debe especificar el motivo."
     );
+
 
     return false;
 
   }
 
 
-  if (datos.EPIs.length === 0) {
+  if (
+    datos.EPIs.length === 0
+  ) {
+
 
     alert(
       "Debe añadir al menos un EPI."
     );
+
 
     return false;
 
@@ -605,58 +810,85 @@ function validarFormulario(datos) {
 
 async function crearSolicitud() {
 
+
   const datos =
     obtenerDatosFormulario();
 
 
   if (!datos) {
+
     return;
+
   }
 
 
-  if (!validarFormulario(datos)) {
+  if (
+    !validarFormulario(datos)
+  ) {
+
     return;
+
   }
 
 
-  // Confirmación
+  // ================================================
+  // RESUMEN PARA CONFIRMACIÓN
+  // ================================================
 
   let resumen = "";
 
-  datos.EPIs.forEach(epi => {
 
-    resumen +=
-      `\n- ${epi.EPI}`;
+  datos.EPIs.forEach(
+    epi => {
 
-    if (epi.Modelo) {
 
       resumen +=
-        ` (${epi.Modelo})`;
+        `\n- ${epi.EPI}`;
+
+
+      if (epi.Modelo) {
+
+        resumen +=
+          ` (${epi.Modelo})`;
+
+      }
+
+
+      resumen +=
+        ` x${epi.Cantidad}`;
 
     }
+  );
 
-    resumen +=
-      ` x${epi.Cantidad}`;
 
-  });
-
+  // ================================================
+  // CONFIRMACIÓN
+  // ================================================
 
   const confirmar =
     confirm(
+
       `¿Crear esta solicitud?\n\n` +
 
-      `Operario: ${datos.NumeroOperario}\n` +
+      `Operario: ` +
+      `${datos.NumeroOperario}\n` +
 
-      `Trabajador: ${datos.Trabajador}\n` +
+      `Trabajador: ` +
+      `${datos.Trabajador}\n` +
 
-      `Motivo: ${datos.Motivo}\n\n` +
+      `Motivo: ` +
+      `${datos.Motivo}\n\n` +
 
-      `EPIs:${resumen}`
+      `EPIs:` +
+      `${resumen}`
+
     );
 
 
   if (!confirmar) {
+
     return;
+
   }
 
 
@@ -664,17 +896,24 @@ async function crearSolicitud() {
   // COMPROBAR URL
   // ================================================
 
-  if (!POWER_AUTOMATE_URL) {
+  if (
+    !POWER_AUTOMATE_URL ||
+    POWER_AUTOMATE_URL.includes(
+      "PEGA_AQUI"
+    )
+  ) {
+
 
     alert(
-      "La web está funcionando correctamente, " +
-      "pero todavía no se ha configurado Power Automate."
+      "No se ha configurado la conexión con Power Automate."
     );
+
 
     console.log(
       "Payload preparado:",
       datos
     );
+
 
     return;
 
@@ -682,7 +921,7 @@ async function crearSolicitud() {
 
 
   // ================================================
-  // ENVIAR
+  // ELEMENTOS
   // ================================================
 
   const boton =
@@ -690,18 +929,27 @@ async function crearSolicitud() {
       "btnCrearSolicitud"
     );
 
+
   const spinner =
     document.getElementById(
       "spinner"
     );
 
 
-  boton.disabled = true;
+  boton.disabled =
+    true;
 
-  spinner.style.display = "block";
 
+  spinner.style.display =
+    "block";
+
+
+  // ================================================
+  // ENVÍO
+  // ================================================
 
   try {
+
 
     const response =
       await fetch(
@@ -711,58 +959,174 @@ async function crearSolicitud() {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json"
+
+            "Content-Type":
+              "application/json"
+
           },
 
-          body: JSON.stringify(datos)
+          body:
+            JSON.stringify(datos)
 
         }
       );
 
 
-    const resultado =
-      await response.json();
+    // ============================================
+    // LEER RESPUESTA COMO TEXTO
+    // ============================================
 
+    const textoRespuesta =
+      await response.text();
+
+
+    console.log(
+      "Respuesta Power Automate:",
+      textoRespuesta
+    );
+
+
+    // ============================================
+    // INTENTAR JSON
+    // ============================================
+
+    let resultado =
+      null;
+
+
+    if (
+      textoRespuesta &&
+      textoRespuesta.trim() !== ""
+    ) {
+
+
+      try {
+
+        resultado =
+          JSON.parse(
+            textoRespuesta
+          );
+
+      } catch (errorJSON) {
+
+
+        console.warn(
+          "La respuesta de Power Automate no es JSON:",
+          textoRespuesta
+        );
+
+      }
+
+    }
+
+
+    // ============================================
+    // OCULTAR SPINNER
+    // ============================================
 
     spinner.style.display =
       "none";
+
 
     boton.disabled =
       false;
 
 
+    // ============================================
+    // RESPUESTA CORRECTA
+    // ============================================
+
     if (
       response.ok &&
+      resultado &&
       resultado.resultado === "ok"
     ) {
+
 
       mostrarResultado(
         resultado
       );
 
-    } else {
 
-      alert(
-        "Se ha producido un error al crear la solicitud."
-      );
-
-      console.error(
-        resultado
-      );
+      return;
 
     }
 
 
+    // ============================================
+    // RESPUESTA HTTP CORRECTA PERO SIN JSON
+    // ============================================
+
+    if (
+      response.ok &&
+      !resultado
+    ) {
+
+
+      console.warn(
+        "Power Automate respondió correctamente, pero no devolvió JSON."
+      );
+
+
+      alert(
+        "La solicitud se ha enviado, pero no se ha podido obtener el número de solicitud."
+      );
+
+
+      return;
+
+    }
+
+
+    // ============================================
+    // ERROR
+    // ============================================
+
+    console.error(
+
+      "Respuesta inesperada de Power Automate:",
+
+      {
+
+        status:
+          response.status,
+
+        respuesta:
+          textoRespuesta,
+
+        resultado:
+          resultado
+
+      }
+
+    );
+
+
+    alert(
+      "Se ha producido un error al crear la solicitud."
+    );
+
+
   } catch (error) {
+
+
+    // ============================================
+    // ERROR DE CONEXIÓN
+    // ============================================
 
     spinner.style.display =
       "none";
+
 
     boton.disabled =
       false;
 
 
-    console.error(error);
+    console.error(
+      "Error de conexión:",
+      error
+    );
+
 
     alert(
       "No se ha podido conectar con Power Automate."
@@ -777,96 +1141,131 @@ async function crearSolicitud() {
 // MOSTRAR RESULTADO
 // ======================================================
 
-// ======================================================
-// MOSTRAR RESULTADO
-// ======================================================
-
-function mostrarResultado(resultado) {
-
-  // Ocultar formulario completo
-  document.querySelector(".section-title").parentElement;
-
-  document.querySelectorAll(
-    ".section-title, .form-row, #bloqueOtroMotivo, " +
-    "#epis-container, #btnAgregarEPI, .summary-box, " +
-    "#btnCrearSolicitud"
-  ).forEach(elemento => {
-    elemento.style.display = "none";
-  });
+function mostrarResultado(
+  resultado
+) {
 
 
-  // Mostrar resultado
-  const resultadoBox =
-    document.getElementById("resultado");
+  // ================================================
+  // OCULTAR FORMULARIO
+  // ================================================
 
-  resultadoBox.style.display = "block";
-
-
-  // Número de solicitud
-  document.getElementById(
-    "numeroSolicitud"
-  ).innerText =
-    resultado.numeroSolicitud || "";
+  document
+    .getElementById(
+      "formularioSolicitud"
+    )
+    .style.display =
+    "none";
 
 
-  // Enlace de firma
-  document.getElementById(
-    "enlaceFirma"
-  ).value =
-    resultado.enlaceFirma || "";
+  // ================================================
+  // OBTENER NÚMERO
+  // ================================================
+
+  let numero =
+    resultado.numeroSolicitud ||
+    resultado.IDSolicitud ||
+    resultado.idSolicitud ||
+    "";
 
 
-  // Cambiar título principal
+  // ================================================
+  // CONVERTIR A TEXTO
+  // ================================================
+
+  numero =
+    numero
+      .toString()
+      .trim();
+
+
+  // ================================================
+  // FORMATO EPI-2026-0003
+  // ================================================
+
+  if (
+    numero &&
+    !numero.startsWith("EPI-")
+  ) {
+
+
+    const año =
+      new Date()
+        .getFullYear();
+
+
+    numero =
+
+      `EPI-${año}-` +
+
+      String(numero)
+        .padStart(
+          4,
+          "0"
+        );
+
+  }
+
+
+  // ================================================
+  // MOSTRAR NÚMERO
+  // ================================================
+
+  document
+    .getElementById(
+      "numeroSolicitud"
+    )
+    .innerText =
+    numero;
+
+
+  // ================================================
+  // MOSTRAR RESULTADO
+  // ================================================
+
+  document
+    .getElementById(
+      "resultado"
+    )
+    .style.display =
+    "block";
+
+
+  // ================================================
+  // CAMBIAR TÍTULO
+  // ================================================
+
   const titulo =
-    document.querySelector("h1");
+    document.querySelector(
+      "h1"
+    );
+
 
   if (titulo) {
+
     titulo.innerText =
       "Solicitud creada correctamente";
-  }
-
-
-  // Ir al resultado
-  resultadoBox.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-
-}
-
-
-// ======================================================
-// COPIAR ENLACE
-// ======================================================
-
-async function copiarEnlace() {
-
-  const input =
-    document.getElementById(
-      "enlaceFirma"
-    );
-
-  try {
-
-    await navigator.clipboard.writeText(
-      input.value
-    );
-
-    alert(
-      "Enlace copiado."
-    );
-
-  } catch {
-
-    input.select();
-
-    document.execCommand("copy");
-
-    alert(
-      "Enlace copiado."
-    );
 
   }
+
+
+  // ================================================
+  // IR AL RESULTADO
+  // ================================================
+
+  document
+    .getElementById(
+      "resultado"
+    )
+    .scrollIntoView({
+
+      behavior:
+        "smooth",
+
+      block:
+        "start"
+
+    });
 
 }
 
