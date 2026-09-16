@@ -862,3 +862,38 @@ function mostrarError(mensaje) {
 // ======================================================
 
 cargarSolicitud();
+
+function listarCamposPDF() {
+
+    fetch('Reg%20Entrega%20EPIS%20editable.pdf')
+        .then(response => response.arrayBuffer())
+        .then(async bytes => {
+
+            const pdfDoc =
+                await PDFLib.PDFDocument.load(bytes);
+
+            const form =
+                pdfDoc.getForm();
+
+            const campos =
+                form.getFields();
+
+            campos.forEach(campo => {
+
+                console.log(
+                    campo.getName(),
+                    campo.constructor.name
+                );
+
+            });
+
+        })
+        .catch(error => {
+            console.error(
+                "Error leyendo campos:",
+                error
+            );
+        });
+}
+
+listarCamposPDF();
