@@ -700,7 +700,7 @@ try {
     // Posición de la firma en el documento
     pagina.drawImage(firmaImagen, {
     x: 214,
-    y: 681,
+    y: 79,
     width: 130,
     height: 50
 });
