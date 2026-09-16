@@ -527,13 +527,10 @@ async function probarPDF() {
     const pdfFinal = await pdfDoc.save();
 
     // Abrirlo
-    const blob = new Blob([pdfFinal], {
-        type: 'application/pdf'
-    });
+    const blob = new Blob([pdfFinal], { type: 'application/pdf' });
+const url = URL.createObjectURL(blob);
 
-    const url = URL.createObjectURL(blob);
-
-    window.open(url, '_blank');
+document.getElementById("visorPDF").src = url;
 }
 
 probarPDF();
