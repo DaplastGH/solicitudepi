@@ -6,7 +6,6 @@ const POWER_AUTOMATE_URL = "https://default9057cb6da67347c7b025e86c6b54bd.2d.env
 
 const POWER_AUTOMATE_URL_FIRMA = "https://default9057cb6da67347c7b025e86c6b54bd.2d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/07/workflows/d1c008abf1794d05966acb78c89a286e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XISxADVeCHdLM7OhIER-LvNDz0fykHB-N-4ukGPo7Qk"
 
-
 // ======================================================
 // OBTENER ID DE SOLICITUD DE LA URL
 // ======================================================
@@ -228,7 +227,39 @@ btnBorrar.addEventListener(
 
 
 // ======================================================
-// GENERAR PDF
+// CONVERTIR ARRAYBUFFER A BASE64
+// ======================================================
+
+function arrayBufferToBase64(buffer) {
+
+    let binary = "";
+
+    const bytes = new Uint8Array(buffer);
+
+    const chunkSize = 0x8000;
+
+    for (
+        let i = 0;
+        i < bytes.length;
+        i += chunkSize
+    ) {
+
+        const chunk = bytes.subarray(
+            i,
+            i + chunkSize
+        );
+
+        binary += String.fromCharCode(
+            ...chunk
+        );
+    }
+
+    return btoa(binary);
+}
+
+
+// ======================================================
+// GENERAR PDF CON LOS DATOS DE LA SOLICITUD
 // ======================================================
 
 async function generarPDFSolicitud(datos) {
@@ -237,15 +268,16 @@ async function generarPDFSolicitud(datos) {
 
         // Descargar PDF original
         const respuestaPDF = await fetch(
-            'Reg%20Entrega%20EPIS%20editable.pdf'
+            "Reg%20Entrega%20EPIS%20editable.pdf"
         );
 
         if (!respuestaPDF.ok) {
 
             throw new Error(
-                'No se ha podido cargar el PDF original'
+                "No se ha podido cargar el PDF original"
             );
         }
+
 
         const pdfBytes =
             await respuestaPDF.arrayBuffer();
@@ -268,23 +300,48 @@ async function generarPDFSolicitud(datos) {
         // ==================================================
 
         form.getTextField(
-            'Textbox2'
+            "Textbox2"
         ).setText(
-            datos.solicitud.area || ''
+            datos.solicitud.area || ""
         );
 
 
         form.getTextField(
-            'Textbox3'
+            "Textbox3"
         ).setText(
-            datos.solicitud.trabajador || ''
+            datos.solicitud.trabajador || ""
         );
 
 
         form.getTextField(
-            'Textbox4'
+            "Textbox4"
         ).setText(
-            datos.solicitud.puesto || ''
+            datos.solicitud.puesto || ""
+        );
+
+
+        // ==================================================
+        // FECHA
+        // ==================================================
+
+        const ahora = new Date();
+
+        const fechaFirma =
+            String(
+                ahora.getDate()
+            ).padStart(2, "0") + "/" +
+
+            String(
+                ahora.getMonth() + 1
+            ).padStart(2, "0") + "/" +
+
+            ahora.getFullYear();
+
+
+        form.getTextField(
+            "Textbox23"
+        ).setText(
+            fechaFirma
         );
 
 
@@ -294,30 +351,30 @@ async function generarPDFSolicitud(datos) {
 
         const camposEPI = [
 
-            'Textbox1',
-            'Textbox5',
-            'Textbox6',
-            'Textbox7',
-            'Textbox8',
-            'Textbox9',
-            'Textbox10',
-            'Textbox11',
-            'Textbox12'
+            "Textbox1",
+            "Textbox5",
+            "Textbox6",
+            "Textbox7",
+            "Textbox8",
+            "Textbox9",
+            "Textbox10",
+            "Textbox11",
+            "Textbox12"
 
         ];
 
 
         const camposCantidad = [
 
-            'Textbox13',
-            'Textbox14',
-            'Textbox15',
-            'Textbox16',
-            'Textbox17',
-            'Textbox18',
-            'Textbox19',
-            'Textbox20',
-            'Textbox21'
+            "Textbox13",
+            "Textbox14",
+            "Textbox15",
+            "Textbox16",
+            "Textbox17",
+            "Textbox18",
+            "Textbox19",
+            "Textbox20",
+            "Textbox21"
 
         ];
 
@@ -329,14 +386,14 @@ async function generarPDFSolicitud(datos) {
         datos.epis.forEach(
             (epi, index) => {
 
-                // El PDF tiene 9 filas
+                // Máximo 9 líneas
                 if (index >= 9) return;
 
 
                 form.getTextField(
                     camposEPI[index]
                 ).setText(
-                    epi.epi || ''
+                    epi.epi || ""
                 );
 
 
@@ -344,21 +401,14 @@ async function generarPDFSolicitud(datos) {
                     camposCantidad[index]
                 ).setText(
                     String(
-                        epi.cantidad || ''
+                        epi.cantidad || ""
                     )
                 );
 
             }
         );
 
-const ahora = new Date();
 
-const fechaFirma =
-    String(ahora.getDate()).padStart(2, '0') + '/' +
-    String(ahora.getMonth() + 1).padStart(2, '0') + '/' +
-    ahora.getFullYear();
-
-form.getTextField('Textbox23').setText(fechaFirma);
         // ==================================================
         // APLANAR FORMULARIO
         // ==================================================
@@ -367,23 +417,26 @@ form.getTextField('Textbox23').setText(fechaFirma);
 
 
         // ==================================================
-        // GENERAR PDF FINAL DE ESTA FASE
+        // GENERAR PDF
         // ==================================================
 
         const pdfFinal =
             await pdfDoc.save();
+
+
+        // Guardar PDF en memoria
         pdfActual = pdfFinal;
 
 
         // ==================================================
-        // MOSTRAR PDF EN LA PÁGINA
+        // MOSTRAR PDF EN EL VISOR
         // ==================================================
 
         const blob =
             new Blob(
                 [pdfFinal],
                 {
-                    type: 'application/pdf'
+                    type: "application/pdf"
                 }
             );
 
@@ -394,14 +447,14 @@ form.getTextField('Textbox23').setText(fechaFirma);
 
         const visorPDF =
             document.getElementById(
-                'visorPDF'
+                "visorPDF"
             );
 
 
         if (!visorPDF) {
 
             throw new Error(
-                'No se encuentra el visorPDF en el HTML'
+                "No se encuentra el visorPDF en el HTML"
             );
         }
 
@@ -411,16 +464,19 @@ form.getTextField('Textbox23').setText(fechaFirma);
 
         return pdfFinal;
 
+
     } catch (error) {
 
         console.error(
-            'Error generando PDF:',
+            "Error generando PDF:",
             error
         );
 
+
         mostrarError(
-            'No se ha podido generar el PDF.'
+            "No se ha podido generar el PDF."
         );
+
 
         return null;
     }
@@ -471,8 +527,10 @@ async function cargarSolicitud() {
                     },
 
                     body: JSON.stringify({
+
                         IDSolicitud:
                             idSolicitud
+
                     })
                 }
             );
@@ -594,7 +652,7 @@ async function cargarSolicitud() {
 
 
         // ==================================================
-        // GENERAR PDF CON LOS DATOS REALES
+        // GENERAR PDF
         // ==================================================
 
         await generarPDFSolicitud(
@@ -628,7 +686,10 @@ btnFirmar.addEventListener(
             "none";
 
 
-        // Comprobar firma
+        // ==================================================
+        // COMPROBAR FIRMA
+        // ==================================================
+
         if (!hayFirma) {
 
             mostrarError(
@@ -639,7 +700,10 @@ btnFirmar.addEventListener(
         }
 
 
-        // Comprobar aceptación
+        // ==================================================
+        // COMPROBAR ACEPTACIÓN
+        // ==================================================
+
         if (!aceptacion.checked) {
 
             mostrarError(
@@ -650,7 +714,10 @@ btnFirmar.addEventListener(
         }
 
 
-        // Comprobar solicitud
+        // ==================================================
+        // COMPROBAR SOLICITUD
+        // ==================================================
+
         if (!idSolicitud) {
 
             mostrarError(
@@ -660,129 +727,152 @@ btnFirmar.addEventListener(
             return;
         }
 
-// ==================================================
-// INCORPORAR FIRMA AL PDF
-// ==================================================
 
-if (!pdfActual) {
-
-    mostrarError(
-        "El PDF todavía no está disponible."
-    );
-
-    return;
-}
-
-try {
-
-    btnFirmar.disabled = true;
-    btnFirmar.textContent = "Generando documento...";
-
-    // Cargar el PDF que ya hemos rellenado
-    const pdfDoc = await PDFLib.PDFDocument.load(pdfActual);
-
-    const pagina = pdfDoc.getPages()[0];
-
-    // Obtener firma del canvas
-    const firmaData = canvas.toDataURL("image/png");
-
-    // Convertir la firma a bytes
-    const firmaBytes = await fetch(firmaData)
-        .then(res => res.arrayBuffer());
-
-    // Insertar firma como imagen PNG
-    const firmaImagen = await pdfDoc.embedPng(firmaBytes);
-
-    // Tamaño de la firma
-    const anchoFirma = 130;
-    const altoFirma = 50;
-
-    // Posición de la firma en el documento
-    pagina.drawImage(firmaImagen, {
-    x: 214,
-    y: 79,
-    width: 130,
-    height: 50
-});
-
-    // Guardar PDF definitivo
-    const pdfFirmado = await pdfDoc.save();
-
-    // Mostrar PDF firmado en el visor
-    const blob = new Blob(
-        [pdfFirmado],
-        {
-            type: "application/pdf"
-        }
-    );
-
-    const url = URL.createObjectURL(blob);
-
-    document.getElementById("visorPDF").src = url;
-
-    // Guardarlo para el siguiente paso
-    pdfActual = pdfFirmado;
-
-    btnFirmar.textContent =
-        "Documento firmado";
-
-    mensajeExito.style.display = "block";
-
-    console.log(
-        "PDF firmado correctamente"
-    );
-return;
-} catch (error) {
-
-    console.error(
-        "Error incorporando firma al PDF:",
-        error
-    );
-
-    mostrarError(
-        "No se ha podido incorporar la firma al documento."
-    );
-
-    btnFirmar.disabled = false;
-
-    btnFirmar.textContent =
-        "Firmar y confirmar entrega";
-}
         // ==================================================
-        // CAPTURAR FIRMA
+        // COMPROBAR PDF
         // ==================================================
 
-        const firma =
-            canvas.toDataURL(
-                "image/png"
+        if (!pdfActual) {
+
+            mostrarError(
+                "El PDF todavía no está disponible."
             );
 
-
-        const payload = {
-
-            IDSolicitud:
-                idSolicitud,
-
-            Firma:
-                firma,
-
-            FechaFirma:
-                new Date().toISOString()
-
-        };
-
-
-        btnFirmar.disabled = true;
-
-        btnFirmar.textContent =
-            "Procesando...";
+            return;
+        }
 
 
         try {
 
+            btnFirmar.disabled = true;
+
+            btnFirmar.textContent =
+                "Generando documento...";
+
+
             // ==================================================
-            // ENVIAR FIRMA A POWER AUTOMATE
+            // CARGAR PDF YA RELLENADO
             // ==================================================
+
+            const pdfDoc =
+                await PDFLib.PDFDocument.load(
+                    pdfActual
+                );
+
+
+            const pagina =
+                pdfDoc.getPages()[0];
+
+
+            // ==================================================
+            // OBTENER FIRMA DEL CANVAS
+            // ==================================================
+
+            const firmaData =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            const firmaBytes =
+                await fetch(
+                    firmaData
+                ).then(
+                    res =>
+                        res.arrayBuffer()
+                );
+
+
+            // ==================================================
+            // INSERTAR FIRMA
+            // ==================================================
+
+            const firmaImagen =
+                await pdfDoc.embedPng(
+                    firmaBytes
+                );
+
+
+            const anchoFirma = 130;
+            const altoFirma = 50;
+
+
+            pagina.drawImage(
+                firmaImagen,
+                {
+                    x: 214,
+                    y: 79,
+                    width: anchoFirma,
+                    height: altoFirma
+                }
+            );
+
+
+            // ==================================================
+            // GENERAR PDF DEFINITIVO
+            // ==================================================
+
+            const pdfFirmado =
+                await pdfDoc.save();
+
+
+            pdfActual =
+                pdfFirmado;
+
+
+            // ==================================================
+            // CONVERTIR PDF A BASE64
+            // ==================================================
+
+            const pdfBase64 =
+                arrayBufferToBase64(
+                    pdfFirmado
+                );
+
+
+            // ==================================================
+            // CAPTURAR FIRMA
+            // ==================================================
+
+            const firma =
+                canvas.toDataURL(
+                    "image/png"
+                );
+
+
+            // ==================================================
+            // PREPARAR PAYLOAD
+            // ==================================================
+
+            const payload = {
+
+                IDSolicitud:
+                    idSolicitud,
+
+                Firma:
+                    firma,
+
+                FechaFirma:
+                    new Date().toISOString(),
+
+                PDF:
+                    pdfBase64
+
+            };
+
+
+            console.log(
+                "Enviando PDF firmado a Power Automate..."
+            );
+
+
+            // ==================================================
+            // ENVIAR A POWER AUTOMATE
+            // ==================================================
+
+            btnFirmar.textContent =
+                "Guardando documento...";
+
 
             const response =
                 await fetch(
@@ -806,10 +896,38 @@ return;
             if (!response.ok) {
 
                 throw new Error(
-                    "Error al enviar la firma."
+                    "Error al enviar el documento."
                 );
             }
 
+
+            // ==================================================
+            // MOSTRAR PDF FIRMADO
+            // ==================================================
+
+            const blob =
+                new Blob(
+                    [pdfFirmado],
+                    {
+                        type: "application/pdf"
+                    }
+                );
+
+
+            const url =
+                URL.createObjectURL(
+                    blob
+                );
+
+
+            document.getElementById(
+                "visorPDF"
+            ).src = url;
+
+
+            // ==================================================
+            // ÉXITO
+            // ==================================================
 
             mensajeExito.style.display =
                 "block";
@@ -819,9 +937,15 @@ return;
                 "Documento firmado";
 
 
+            console.log(
+                "PDF firmado y enviado correctamente"
+            );
+
+
         } catch (error) {
 
             console.error(
+                "Error:",
                 error
             );
 
