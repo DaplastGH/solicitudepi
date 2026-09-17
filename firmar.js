@@ -567,6 +567,15 @@ async function cargarSolicitud() {
         const solicitud =
             datos.solicitud;
 
+if (solicitud.estado === "Firmado") {
+
+    document.getElementById("formularioFirma").style.display = "none";
+
+    document.getElementById("solicitudFirmada").style.display = "block";
+
+    return;
+}
+
 
         // ==================================================
         // DATOS GENERALES EN HTML
