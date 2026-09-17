@@ -425,4 +425,82 @@ select:focus {
     font-size: 19px;
   }
 
+  /* =====================================================
+   SOLICITUDES PENDIENTES
+   ===================================================== */
+
+.buscador-controles {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.solicitud-pendiente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+
+  background: white;
+
+  border: 1px solid #e5e5e5;
+
+  border-radius: 10px;
+
+  padding: 18px;
+
+  margin-bottom: 12px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.solicitud-pendiente-id {
+  font-size: 18px;
+  font-weight: bold;
+  color: #044a80;
+  margin-bottom: 8px;
+}
+
+.solicitud-pendiente-dato {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.solicitud-pendiente-accion {
+  flex-shrink: 0;
+}
+
+.error-box {
+  padding: 20px;
+  margin-top: 20px;
+
+  border-radius: 10px;
+
+  background: #f8f8f8;
+
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+
+  .buscador-controles {
+    flex-direction: column;
+  }
+
+  .solicitud-pendiente {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .solicitud-pendiente-accion {
+    width: 100%;
+  }
+
+  .solicitud-pendiente-accion button {
+    width: 100%;
+  }
+
+}
+
 }
