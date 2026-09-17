@@ -567,17 +567,15 @@ async function cargarSolicitud() {
         const solicitud =
             datos.solicitud;
 
-if (solicitud.estado === "Firmado") {
-
-    document.querySelector(".firma-container").style.display = "none";
-
-    document.querySelector(".aceptacion").style.display = "none";
-
-    document.getElementById("btnFirmar").style.display = "none";
-
-    document.getElementById("documentoFirmado").style.display = "block";
-
-    return;
+        console.log("ESTADO SOLICITUD:", solicitud.estado);
+        
+        if (solicitud.estado === "Firmado") {
+            console.log("🔒 SOLICITUD FIRMADA - BLOQUEANDO");
+            document.querySelector(".firma-container").style.display = "none";
+            document.querySelector(".aceptacion").style.display = "none";
+            document.getElementById("btnFirmar").style.display = "none";
+            document.getElementById("documentoFirmado").style.display = "block";
+            return;
 }
 
 
