@@ -662,7 +662,6 @@ async function cargarSolicitud() {
             document.querySelector(".aceptacion").style.display = "none";
             document.getElementById("btnFirmar").style.display = "none";
             document.getElementById("documentoFirmado").style.display = "block";
-            return;
 }
         // ==================================================
         // GENERAR PDF
