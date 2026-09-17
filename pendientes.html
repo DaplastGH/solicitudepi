@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>DAPLAST - Solicitudes pendientes</title>
+
+
+  <!-- CSS -->
+
+  <link
+    rel="stylesheet"
+    href="styles.css"
+  >
+
+</head>
+
+
+<body>
+
+
+  <main class="page-container">
+
+
+    <div class="solicitud-box">
+
+
+      <!-- ================================================= -->
+      <!-- LOGO -->
+      <!-- ================================================= -->
+
+      <div class="logo-daplast">
+
+        <img
+          src="https://daplast.com/wp-content/uploads/2022/06/logo-daplast.png"
+          alt="Logo DAPLAST"
+        >
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- TÍTULO -->
+      <!-- ================================================= -->
+
+      <h1>
+        Solicitudes pendientes
+      </h1>
+
+
+      <!-- ================================================= -->
+      <!-- BUSCADOR -->
+      <!-- ================================================= -->
+
+      <div class="section-title">
+        Buscar solicitud
+      </div>
+
+
+      <div class="form-group">
+
+        <label for="busqueda">
+          Nº de solicitud, Nº de operario o trabajador
+        </label>
+
+
+        <input
+          type="text"
+          id="busqueda"
+          placeholder="Ej. EPI-2026-0003, 121122 o Sebastián"
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- CONTROLES -->
+      <!-- ================================================= -->
+
+      <div class="buscador-controles">
+
+        <button
+          type="button"
+          class="primary-btn"
+          id="btnBuscar"
+        >
+          Buscar
+        </button>
+
+
+        <button
+          type="button"
+          class="secondary-btn"
+          id="btnMostrarTodas"
+        >
+          Mostrar todas
+        </button>
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- SPINNER -->
+      <!-- ================================================= -->
+
+      <div
+        id="spinner"
+        class="spinner-container"
+        style="display:none;"
+      >
+
+        <div class="loader"></div>
+
+        <p>
+          Cargando solicitudes...
+        </p>
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- CONTADOR -->
+      <!-- ================================================= -->
+
+      <div
+        id="contadorResultados"
+        class="summary-box"
+        style="display:none;"
+      >
+
+        <div>
+
+          <strong>
+            Solicitudes pendientes
+          </strong>
+
+          <span id="numeroResultados">
+            0
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- LISTADO -->
+      <!-- ================================================= -->
+
+      <div id="listaSolicitudes">
+
+
+        <!-- Las solicitudes se generan mediante JavaScript -->
+
+
+      </div>
+
+
+      <!-- ================================================= -->
+      <!-- SIN RESULTADOS -->
+      <!-- ================================================= -->
+
+      <div
+        id="sinResultados"
+        style="display:none;"
+      >
+
+        <p>
+          No se encontraron solicitudes pendientes.
+        </p>
+
+      </div>
+
+
+    </div>
+
+
+  </main>
+
+
+  <!-- ================================================= -->
+  <!-- JAVASCRIPT -->
+  <!-- ================================================= -->
+
+  <script src="pendientes.js"></script>
+
+
+</body>
+
+</html>
