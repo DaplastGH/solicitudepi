@@ -569,9 +569,13 @@ async function cargarSolicitud() {
 
 if (solicitud.estado === "Firmado") {
 
-    document.getElementById("formularioFirma").style.display = "none";
+    document.querySelector(".firma-container").style.display = "none";
 
-    document.getElementById("solicitudFirmada").style.display = "block";
+    document.querySelector(".aceptacion").style.display = "none";
+
+    document.getElementById("btnFirmar").style.display = "none";
+
+    document.getElementById("documentoFirmado").style.display = "block";
 
     return;
 }
