@@ -667,9 +667,9 @@ async function cargarSolicitud() {
         // GENERAR PDF
         // ==================================================
 
-        await generarPDFSolicitud(
-            datos
-        );
+        if (solicitud.estado !== "Firmado") {
+    await generarPDFSolicitud(datos);
+}
 
 
     } catch (error) {
