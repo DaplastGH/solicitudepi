@@ -37,6 +37,7 @@ const ctx = canvas.getContext("2d");
 let dibujando = false;
 let hayFirma = false;
 let pdfActual = null;
+let solicitudActual = null;
 
 
 // Ajustar resolución del canvas
@@ -594,6 +595,7 @@ async function cargarSolicitud() {
 
         const solicitud =
             datos.solicitud;
+        solicitudActual = solicitud;
 
         // ==================================================
         // DATOS GENERALES EN HTML
@@ -887,7 +889,7 @@ btnFirmar.addEventListener(
 
             const payload = {
     IDSolicitud: idSolicitud,
-    NumeroOperario: datos.solicitud.numeroOperario,
+    NumeroOperario: solicitudActual.numeroOperario,
     Firma: firma,
     FechaFirma: new Date().toISOString(),
     PDF: pdfBase64
