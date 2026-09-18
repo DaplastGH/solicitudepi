@@ -344,6 +344,34 @@ async function generarPDFSolicitud(datos) {
             fechaFirma
         );
 
+        // ==================================================
+// MOTIVO DE LA ENTREGA
+// ==================================================
+
+const pagina = pdfDoc.getPages()[0];
+
+const motivo = (datos.solicitud.motivo || "")
+    .trim()
+    .toLowerCase();
+
+const posicionesMotivo = {
+    "1ª entrega": { x: 189, y: 51 },
+    "cambio e.p.i.": { x: 251, y: 51 },
+    "deterioro": { x: 316, y: 51 },
+    "pérdida": { x: 376, y: 51 },
+    "otros": { x: 422, y: 51 }
+};
+
+if (posicionesMotivo[motivo]) {
+
+    const posicion = posicionesMotivo[motivo];
+
+    pagina.drawText("X", {
+        x: posicion.x - 5,
+        y: posicion.y - 5,
+        size: 10
+    });
+}
 
         // ==================================================
         // CAMPOS DE EPIs
