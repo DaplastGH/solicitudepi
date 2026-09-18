@@ -534,7 +534,8 @@ function obtenerDatosFormulario() {
       .value
       .trim();
 
-
+const comentarios =
+    document.getElementById("comentarios").value.trim();
   const epis = [];
 
 
@@ -686,10 +687,13 @@ function obtenerDatosFormulario() {
         ? otroMotivo
         : "",
 
+    Comentarios:
+      comentarios,
+
     EPIs:
       epis
 
-  };
+};
 
 }
 
