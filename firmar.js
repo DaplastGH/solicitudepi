@@ -886,20 +886,12 @@ btnFirmar.addEventListener(
             // ==================================================
 
             const payload = {
-
-                IDSolicitud:
-                    idSolicitud,
-
-                Firma:
-                    firma,
-
-                FechaFirma:
-                    new Date().toISOString(),
-
-                PDF:
-                    pdfBase64
-
-            };
+    IDSolicitud: idSolicitud,
+    NumeroOperario: datos.solicitud.numeroOperario,
+    Firma: firma,
+    FechaFirma: new Date().toISOString(),
+    PDF: pdfBase64
+};
 
 
             console.log(
